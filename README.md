@@ -1,4 +1,4 @@
-android-sdk-search-extension
+Android SDK Search Extension
 ============================
 
 A Chrome extension that adds an 'ad' omnibox command and view source links for the Android SDK.
