@@ -18,7 +18,7 @@ var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/referen
 var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+).html/;
 var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/android\/(R(?:\..+)?).html/;
 
-var _GOOGLESOURCE_URL_TEMPLATE = 'https://android.googlesource.com/$PROJECT/+/refs/heads/master/$TREE/java/$NAME_SLASH';
+var _GOOGLESOURCE_URL_TEMPLATE = 'https://android.googlesource.com/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
 var _GOOGLESOURCE_RESOURCES_PATH = 'https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/res/res/';
 var _GOOGLESOURCE_SAMPLES_PATH = 'https://android.googlesource.com/platform/development/+/master/samples';
 
@@ -47,28 +47,44 @@ var _RESOURCE_MAP = {
 };
 
 var _PACKAGE_MAP = {
-  'java'                  : { project:'platform/libcore',             tree:'luni/src/main' },
-  'javax'                 : { project:'platform/libcore',             tree:'luni/src/main' },
-  'org'                   : { project:'platform/libcore',             tree:'luni/src/main' },
-  'android'               : { project:'platform/frameworks/base',     tree:'core' },
-  'android.drm'           : { project:'platform/frameworks/base',     tree:'drm' },
-  'android.drm.mobile1'   : { project:'platform/frameworks/base',     tree:'media' },
-  'android.renderscript'  : { project:'platform/frameworks/base',     tree:'graphics' },
-  'android.graphics'      : { project:'platform/frameworks/base',     tree:'graphics' },
-  'android.icu     '      : { project:'platform/frameworks/base',     tree:'icu4j' },
-  'android.security'      : { project:'platform/frameworks/base',     tree:'keystore' },
-  'android.location'      : { project:'platform/frameworks/base',     tree:'location' },
-  'android.media'         : { project:'platform/frameworks/base',     tree:'media' },
-  'android.mtp'           : { project:'platform/frameworks/base',     tree:'media' },
-  'android.opengl'        : { project:'platform/frameworks/base',     tree:'opengl' },
-  'android.sax'           : { project:'platform/frameworks/base',     tree:'sax' },
-  'android.telephony'     : { project:'platform/frameworks/base',     tree:'telephony' },
-  'android.net.rtp'       : { project:'platform/frameworks/base',     tree:'voip' },
-  'android.net.sip'       : { project:'platform/frameworks/base',     tree:'voip' },
-  'android.net.wifi'      : { project:'platform/frameworks/base',     tree:'wifi' },
-  'android.support.v4'    : { project:'platform/frameworks/support',  tree:'v4' },
-  'android.support.v7'    : { project:'platform/frameworks/support',  tree:'v7' },
-  'android.support.v13'   : { project:'platform/frameworks/support',  tree:'v13' }
+  'java'                     : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'javax'                    : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'org'                      : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'android'                  : { project:'platform/frameworks/base',     tree:'core/java' },
+  'android.drm'              : { project:'platform/frameworks/base',     tree:'drm/java' },
+  'android.drm.mobile1'      : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.renderscript'     : { project:'platform/frameworks/base',     tree:'graphics/java' },
+  'android.graphics'         : { project:'platform/frameworks/base',     tree:'graphics/java' },
+  'android.icu     '         : { project:'platform/frameworks/base',     tree:'icu4j/java' },
+  'android.security'         : { project:'platform/frameworks/base',     tree:'keystore/java' },
+  'android.location'         : { project:'platform/frameworks/base',     tree:'location/java' },
+  'android.media'            : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.mtp'              : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.opengl'           : { project:'platform/frameworks/base',     tree:'opengl/java' },
+  'android.sax'              : { project:'platform/frameworks/base',     tree:'sax/java' },
+  'android.telephony'        : { project:'platform/frameworks/base',     tree:'telephony/java' },
+  'android.net.rtp'          : { project:'platform/frameworks/base',     tree:'voip/java' },
+  'android.net.sip'          : { project:'platform/frameworks/base',     tree:'voip/java' },
+  'android.net.wifi'         : { project:'platform/frameworks/base',     tree:'wifi/java' },
+  'android.support.v4'       : { project:'platform/frameworks/support',  tree:'v4/java' },
+  'android.support.v7'       : { project:'platform/frameworks/support',  tree:'v7/appcompat/src' },
+  'android.support.v7.media' : { project:'platform/frameworks/support',  tree:'v7/mediarouter/src' },
+  'android.support.v13'      : { project:'platform/frameworks/support',  tree:'v13/java' }
+};
+
+var _TREE_REFINEMENTS = {
+  'android.support.v7.app': [
+    {
+      regex: /MediaRoute/,
+      tree: 'v7/mediarouter/src'
+    }
+  ],
+  'android.support.v7.widget': [
+    {
+      regex: /(GridLayout)|(\.Space$)/,
+      tree: 'v7/gridlayout/src'
+    }
+  ]
 };
 
 function trimLastNamePart(s) {
@@ -145,6 +161,15 @@ function getPackageInfo(packageName) {
     var packageName = trimLastNamePart(outerNameDot);
 
     var pi = getPackageInfo(packageName);
+    if (packageName in _TREE_REFINEMENTS) {
+      var refinements = _TREE_REFINEMENTS[packageName];
+      for (var i = 0; i < refinements.length; i++) {
+        if (outerNameDot.match(refinements[i].regex)) {
+          pi.tree = refinements[i].tree;
+          break;
+        }
+      }
+    }
     if (pi) {
       appendContent = [
           ' (<a href="',
