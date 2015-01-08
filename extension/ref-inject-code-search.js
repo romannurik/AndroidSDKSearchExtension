@@ -83,16 +83,20 @@ var _TREE_REFINEMENTS = {
   ],
   'android.support.v7.widget': [
     {
-      regex: /GridLayout|\.Space$/,
-      tree: 'v7/gridlayout/src'
+      regex: /RecyclerView|DefaultItemAnimator|OrientationHelper|LinearSmoothScroller/,
+      tree: 'v7/recyclerview/src'
     },
     {
-      regex: /RecyclerView/,
+      regex: /(Linear|Grid|StaggeredGrid)LayoutManager/,
       tree: 'v7/recyclerview/src'
     },
     {
       regex: /CardView/,
       tree: 'v7/cardview/src'
+    },
+    {
+      regex: /GridLayout|\.Space$/, // must appear after GridLayoutManager
+      tree: 'v7/gridlayout/src'
     }
   ]
 };
