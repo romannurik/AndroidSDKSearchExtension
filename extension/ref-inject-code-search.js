@@ -81,8 +81,16 @@ var _TREE_REFINEMENTS = {
   ],
   'android.support.v7.widget': [
     {
-      regex: /(GridLayout)|(\.Space$)/,
+      regex: /GridLayout|\.Space$/,
       tree: 'v7/gridlayout/src'
+    },
+    {
+      regex: /RecyclerView/,
+      tree: 'v7/recyclerview/src'
+    },
+    {
+      regex: /CardView/,
+      tree: 'v7/cardview/src'
     }
   ]
 };
