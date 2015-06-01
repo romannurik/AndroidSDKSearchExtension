@@ -101,6 +101,15 @@ var _TREE_REFINEMENTS = {
   ]
 };
 
+var _ESPRESSO_PACKAGE_PREFIX = 'android.support.test.espresso';
+
+var _ESPRESSO_FOLDER_MAP = {
+  'contrib' : 'contrib',
+  'intent' : 'intents',
+  'intent.matcher' : 'intents',
+  'intent.rule' : 'intents'
+}
+
 function trimLastNamePart(s) {
   return s.replace(/\.[^.]*$/, '');
 }
@@ -122,6 +131,18 @@ function getPackageInfo(packageName) {
   return null;
 }
 
+function getEspressoInfo(packageName) {
+  if (packageName.indexOf(_ESPRESSO_PACKAGE_PREFIX) != 0) {
+    return null;
+  }
+  var suffix = packageName.substring(_ESPRESSO_PACKAGE_PREFIX.length + 1);
+  var folder = 'core'
+  if (suffix in _ESPRESSO_FOLDER_MAP) {
+    folder = _ESPRESSO_FOLDER_MAP[suffix]
+  }
+  return { suffix : suffix, folder : folder }
+}
+
 (function() {
   var url = window.location.href;
   var appendContent;
@@ -133,13 +154,27 @@ function getPackageInfo(packageName) {
 
     var pi = getPackageInfo(packageName);
     if (pi) {
-      appendContent = [
-          ' (<a href="',
+      var url =
           _GOOGLESOURCE_URL_TEMPLATE
               .replace(/\$PROJECT/g, pi.project)
               .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, nameSlash),
-          '">view source listing</a>)'
+              .replace(/\$NAME_SLASH/g, nameSlash);
+
+      var espressoInfo = getEspressoInfo(packageName);
+      if (espressoInfo != null) {
+         var suffix = espressoInfo.suffix.replace('.', '/')
+         var folder = espressoInfo.folder
+         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/espresso/' + suffix,
+                 'testing/+/android-support-test/espresso/');
+         if (folder == 'core' || suffix.indexOf('/' != -1)) {
+           url += folder + '/src/main/java/android/support/test/espresso/' + suffix;
+         } else {
+           url += folder;
+         }
+      }
+
+      appendContent = [
+          ' (<a href="', url, '">view source listing</a>)'
       ].join('');
     }
 
@@ -185,13 +220,21 @@ function getPackageInfo(packageName) {
       }
     }
     if (pi) {
-      appendContent = [
-          ' (<a href="',
+      var url =
           _GOOGLESOURCE_URL_TEMPLATE
               .replace(/\$PROJECT/g, pi.project)
               .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, outerNameSlash + '.java'),
-          '">view source</a>)'
+              .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
+
+      var espressoInfo = getEspressoInfo(packageName);
+      if (espressoInfo != null) {
+         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/espresso/',
+             'testing/+/android-support-test/espresso/'
+                 + espressoInfo.folder + '/src/main/java/android/support/test/espresso/');
+      }
+
+      appendContent = [
+          ' (<a href="', url, '">view source</a>)'
       ].join('');
     }
 
