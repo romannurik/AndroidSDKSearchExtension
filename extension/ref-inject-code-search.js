@@ -242,6 +242,7 @@ function getEspressoInfo(packageName) {
 
   if (appendContent) {
     var appendNode = document.createElement('span');
+    appendNode.style.display = "inline-block";
     appendNode.innerHTML = appendContent;
 
     document
