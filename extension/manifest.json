@@ -6,7 +6,8 @@
   "content_security_policy": "script-src 'self' https://developer.android.com; object-src 'self'",
   "permissions": [
     "tabs",
-    "*://developer.android.com/*"
+    "*://developer.android.com/*",
+    "storage"
   ],
   "icons": {
     "16": "icons/16.png",
@@ -29,5 +30,9 @@
   ],
   "background": {
     "scripts": ["background.js"]
+  },
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
   }
 }
