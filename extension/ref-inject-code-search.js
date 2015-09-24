@@ -18,9 +18,9 @@ var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/referen
 var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+).html/;
 var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/android\/(R(?:\..+)?).html/;
 
-var _GOOGLESOURCE_URL_TEMPLATE = 'https://android.googlesource.com/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
-var _GOOGLESOURCE_RESOURCES_PATH = 'https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/res/res/';
-var _GOOGLESOURCE_SAMPLES_PATH = 'https://android.googlesource.com/platform/development/+/master/samples';
+var _GOOGLESOURCE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
+var _GOOGLESOURCE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
+var _GOOGLESOURCE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
 
 var _RESOURCE_MAP = {
   'R'               : '',
@@ -143,7 +143,9 @@ function getEspressoInfo(packageName) {
   return { suffix : suffix, folder : folder }
 }
 
-(function() {
+chrome.storage.local.get({
+  baseUrl: 'https://android.googlesource.com'
+}, function(items) {
   var url = window.location.href;
   var appendContent;
 
@@ -156,6 +158,7 @@ function getEspressoInfo(packageName) {
     if (pi) {
       var url =
           _GOOGLESOURCE_URL_TEMPLATE
+              .replace(/\$BASEURL/g, items.baseUrl)
               .replace(/\$PROJECT/g, pi.project)
               .replace(/\$TREE/g, pi.tree)
               .replace(/\$NAME_SLASH/g, nameSlash);
@@ -192,7 +195,7 @@ function getEspressoInfo(packageName) {
         appendContent += [
             (i == 0) ? '' : ' &bull; ',
             '<a href="',
-            _GOOGLESOURCE_RESOURCES_PATH + resPath,
+            _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
             '">',
             (i == 0) ? 'view ' : '',
             'res/',
@@ -222,6 +225,7 @@ function getEspressoInfo(packageName) {
     if (pi) {
       var url =
           _GOOGLESOURCE_URL_TEMPLATE
+              .replace(/\$BASEURL/g, items.baseUrl)
               .replace(/\$PROJECT/g, pi.project)
               .replace(/\$TREE/g, pi.tree)
               .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
@@ -263,7 +267,7 @@ function getEspressoInfo(packageName) {
     } else if (classSuffix == codePath.slice(-classSuffix.length)) {
       codePath = codePath.slice(0, codePath.length - classSuffix.length) + '.java';
     }
-    link.href = _GOOGLESOURCE_SAMPLES_PATH + codePath;
+    link.href = _GOOGLESOURCE_SAMPLES_PATH.replace(/\$BASEURL/g, items.baseUrl) + codePath;
   }
 
-})();
+});
