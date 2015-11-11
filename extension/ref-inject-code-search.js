@@ -29,9 +29,9 @@ var _RESOURCE_MAP = {
   'R.array'         : 'values/arrays.xml',
   'R.attr'          : 'values/attrs.xml',
   'R.bool'          : 'values/bools.xml',
-  'R.color'         : 'values/colors.xml',
-  'R.dimen'         : 'values/dimens.xml',
-  'R.drawable'      : ['drawable/', 'drawable-xhdpi/'],
+  'R.color'         : 'values/colors_material.xml',
+  'R.dimen'         : 'values/dimens_material.xml',
+  'R.drawable'      : ['drawable/', 'drawable-xxhdpi/'],
   'R.id'            : 'values/ids.xml',
   'R.integer'       : 'integers.xml',
   'R.interpolator'  : 'interpolator/',
@@ -41,7 +41,7 @@ var _RESOURCE_MAP = {
   'R.plurals'       : 'values/strings.xml',
   'R.raw'           : 'raw/',
   'R.string'        : 'values/strings.xml',
-  'R.style'         : ['values/styles.xml', 'values/themes.xml'],
+  'R.style'         : ['values/styles_material.xml', 'values/themes_material.xml'],
   'R.styleable'     : 'values/attrs.xml',
   'R.xml'           : 'xml/'
 };
@@ -212,7 +212,7 @@ chrome.storage.local.get({
       }
 
       appendContent = [
-          ' (<a href="', url, '">view source listing</a>)'
+          '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
       ].join('');
     }
 
@@ -224,21 +224,17 @@ chrome.storage.local.get({
         // Single string, convert to array
         destinations = [destinations];
       }
-      appendContent = ' (';
+      appendContent = '';
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
         appendContent += [
-            (i == 0) ? '' : ' &bull; ',
-            '<a href="',
+            '<a class="__asdk_search_extension_link__" href="',
             _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
-            '">',
-            (i == 0) ? 'view ' : '',
-            'res/',
+            '">view res/',
             resPath.replace(/\/$/,''),
             '</a>'
         ].join('');
       }
-      appendContent += ')';
     }
 
   } else if (m = url.match(_CLASS_DOC_URL_REGEX)) {
@@ -273,21 +269,18 @@ chrome.storage.local.get({
       }
 
       appendContent = [
-          ' (<a href="', url, '">view source</a>)'
+          '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
       ].join('');
     }
 
   }
 
   if (appendContent) {
-    var appendNode = document.createElement('span');
-    appendNode.style.display = "inline-block";
+    var appendNode = document.createElement('div');
+    appendNode.classList.add('__asdk_search_extension_link_container__');
     appendNode.innerHTML = appendContent;
-
-    document
-        .getElementById('jd-header')
-        .getElementsByTagName('h1')[0]
-        .appendChild(appendNode);
+    document.querySelector('#jd-header').insertBefore(
+        appendNode, document.querySelector('#jd-header h1').nextSibling);
   }
 
   // rewrite any direct links to sample code

@@ -1,0 +1,25 @@
+.__asdk_search_extension_link_container__ {
+  margin-bottom: 8px;
+}
+
+.__asdk_search_extension_link__ {
+  display: inline-block;
+  padding: 3px 6px;
+  border: 2px solid rgba(3, 155, 229, 0.85);
+  border-radius: 4px;
+  color: #039BE5;
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 15px;
+}
+
+.__asdk_search_extension_link__ + .__asdk_search_extension_link__ {
+  margin-left: 4px;
+}
+
+.__asdk_search_extension_link__:hover {
+  border-color: #039BE5;
+  background-color: #039BE5;
+  color: #fff;
+}

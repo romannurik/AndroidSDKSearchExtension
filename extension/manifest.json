@@ -25,6 +25,9 @@
       ],
       "js": [
         "ref-inject-code-search.js"
+      ],
+      "css": [
+        "ref-inject-code-search.css"
       ]
     }
   ],
