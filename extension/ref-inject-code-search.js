@@ -107,14 +107,22 @@ var _TREE_REFINEMENTS = {
   ]
 };
 
-var _ESPRESSO_PACKAGE_PREFIX = 'android.support.test.espresso';
+var _ATSL_PACKAGE_PREFIX = 'android.support.test';
 
-var _ESPRESSO_FOLDER_MAP = {
-  'contrib' : 'contrib',
-  'intent' : 'intents',
-  'intent.matcher' : 'intents',
-  'intent.rule' : 'intents'
-}
+/*
+ * Pattern map for ATSL.
+ * NB: Order is important
+ */
+var _ATSL_FOLDER_MAP = {
+  'espresso.contrib' : 'espresso/contrib',
+  'espresso.intent' : 'espresso/intents',
+  'espresso.web' : 'espresso/web',
+  'espresso' : 'espresso/core',
+  'rule' : 'rules',
+  'annotation' : 'rules', // only for UiThreadTest
+  'filters' : 'runner',
+  'uiautomator' : 'uiautomator_test_libraries',
+};
 
 function trimLastNamePart(s) {
   return s.replace(/\.[^.]*$/, '');
@@ -137,16 +145,30 @@ function getPackageInfo(packageName) {
   return null;
 }
 
-function getEspressoInfo(packageName) {
-  if (packageName.indexOf(_ESPRESSO_PACKAGE_PREFIX) != 0) {
+function getTestingSupportLibraryInfo(packageName) {
+  if (packageName.indexOf(_ATSL_PACKAGE_PREFIX) != 0) {
     return null;
   }
-  var suffix = packageName.substring(_ESPRESSO_PACKAGE_PREFIX.length + 1);
-  var folder = 'core'
-  if (suffix in _ESPRESSO_FOLDER_MAP) {
-    folder = _ESPRESSO_FOLDER_MAP[suffix]
+  var suffix = packageName.substring(_ATSL_PACKAGE_PREFIX.length + 1);
+  var folder = null;
+  //Try and find folder match in map.
+  //A match can be part of the suffix
+  var s;
+  for (s in _ATSL_FOLDER_MAP) {
+    if (packageName.indexOf(s) != -1) {
+      folder = _ATSL_FOLDER_MAP[s];
+      break;
+    }
   }
-  return { suffix : suffix, folder : folder }
+  if (folder == null) {
+    if (suffix == '' || suffix.indexOf('runner') != -1) {
+      folder = 'runner';
+    } else {
+      //Better to guess rather than nothing
+      folder = suffix.replace(/\./, '/');
+    }
+  }
+  return { suffix : suffix, folder : folder };
 }
 
 chrome.storage.local.get({
@@ -169,17 +191,24 @@ chrome.storage.local.get({
               .replace(/\$TREE/g, pi.tree)
               .replace(/\$NAME_SLASH/g, nameSlash);
 
-      var espressoInfo = getEspressoInfo(packageName);
+      var espressoInfo = getTestingSupportLibraryInfo(packageName);
       if (espressoInfo != null) {
-         var suffix = espressoInfo.suffix.replace('.', '/')
-         var folder = espressoInfo.folder
-         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/espresso/' + suffix,
-                 'testing/+/android-support-test/espresso/');
-         if (folder == 'core' || suffix.indexOf('/' != -1)) {
-           url += folder + '/src/main/java/android/support/test/espresso/' + suffix;
-         } else {
-           url += folder;
-         }
+        var suffix;
+        if (espressoInfo.suffix != null) {
+          suffix = espressoInfo.suffix.replace(/\./g, '/');
+        } else {
+          suffix = '';
+        }
+        var folder = espressoInfo.folder;
+        var urlPattern;
+        if (suffix != '') {
+          urlPattern = 'base/+/refs/heads/master/core/java/android/support/test/' + suffix;
+        } else {
+          urlPattern = 'base/+/refs/heads/master/core/java/android/support/test';
+        }
+        url = url.replace(urlPattern,
+               'testing/+/android-support-test/');
+        url += folder + '/src/main/java/android/support/test/' + suffix;
       }
 
       appendContent = [
@@ -236,11 +265,11 @@ chrome.storage.local.get({
               .replace(/\$TREE/g, pi.tree)
               .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
 
-      var espressoInfo = getEspressoInfo(packageName);
+      var espressoInfo = getTestingSupportLibraryInfo(packageName);
       if (espressoInfo != null) {
-         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/espresso/',
-             'testing/+/android-support-test/espresso/'
-                 + espressoInfo.folder + '/src/main/java/android/support/test/espresso/');
+         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/',
+             'testing/+/android-support-test/'
+                 + espressoInfo.folder + '/src/main/java/android/support/test/');
       }
 
       appendContent = [
