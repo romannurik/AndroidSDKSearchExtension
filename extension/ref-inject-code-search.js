@@ -279,8 +279,8 @@ chrome.storage.local.get({
     var appendNode = document.createElement('div');
     appendNode.classList.add('__asdk_search_extension_link_container__');
     appendNode.innerHTML = appendContent;
-    document.querySelector('#jd-header').insertBefore(
-        appendNode, document.querySelector('#jd-header h1').nextSibling);
+    document.querySelector('#jd-content').insertBefore(
+        appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
 
   // rewrite any direct links to sample code
