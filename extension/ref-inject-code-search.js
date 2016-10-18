@@ -47,9 +47,11 @@ var _RESOURCE_MAP = {
 };
 
 var _PACKAGE_MAP = {
-  'java'                                 : { project:'platform/libcore',             tree:'luni/src/main/java' },
-  'javax'                                : { project:'platform/libcore',             tree:'luni/src/main/java' },
-  'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'java'                                 : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'javax'                                : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'org'                                  : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'java.util.concurrent'                 : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
   'android.drm'                          : { project:'platform/frameworks/base',     tree:'drm/java' },
   'android.drm.mobile1'                  : { project:'platform/frameworks/base',     tree:'media/java' },
