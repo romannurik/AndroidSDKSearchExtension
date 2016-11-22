@@ -1,6 +1,10 @@
 // Saves options to chrome.local.sync.
 function save_options() {
+  var customUrl = document.getElementById("customUrl").value;
+
   var url = document.querySelector('input:checked').value;
+  if (url === 'on') url = customUrl;
+
   chrome.storage.local.set({
     baseUrl: url
   }, function () {
@@ -16,11 +20,14 @@ function save_options() {
 function restore_options() {
   chrome.storage.local.get({
     baseUrl: 'https://android.googlesource.com'
-  }, function(items) {
-    if (items.baseUrl === 'https://android.googlesource.com'){
+  }, function (items) {
+    if (items.baseUrl === 'https://android.googlesource.com') {
       document.getElementById("googlesource").checked = true;
-    } else {
+    } else if (items.baseUrl === 'https://github.com') {
       document.getElementById("github").checked = true;
+    } else {
+      document.getElementById("customCheck").checked = true;
+      document.getElementById("customUrl").value = items.baseUrl;
     }
   });
 }

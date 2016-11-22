@@ -21,6 +21,10 @@ var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android\.com\/refer
 var _GOOGLESOURCE_SITE = "https://android.googlesource.com";
 var _GITHUB_SITE = "https://github.com";
 
+var _ALTERNATIVE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
+var _ALTERNATIVE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
+var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
+
 var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
 var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
@@ -228,10 +232,15 @@ chrome.storage.local.get({
       if (isOkGithub) {
         templateUrl = _GITHUB_URL_TEMPLATE;
       } else {
-        templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+        if (items.baseUrl === _GOOGLESOURCE_SITE) {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+        } else {
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+        }
       }
 
       var url = templateUrl
+        .replace(/\$BASEURL/g, items.baseUrl)
         .replace(/\$PROJECT/g, pi.project.replace(/\//g, isOkGithub ? "_" : "/"))
         .replace(/\$TREE/g, pi.tree)
         .replace(/\$NAME_SLASH/g, nameSlash);
@@ -282,7 +291,16 @@ chrome.storage.local.get({
         if (_PACKAGE_MAP[packageName].project == null) return;
       }
 
-      var templateUrl = github ? _GITHUB_RESOURCES_PATH : _GOOGLESOURCE_RESOURCES_PATH;
+      var templateUrl;
+      if (github) {
+        templateUrl = _GITHUB_RESOURCES_PATH;
+      } else {
+        if (items.baseUrl === _GOOGLESOURCE_SITE) {
+          templateUrl = _GOOGLESOURCE_RESOURCES_PATH;
+        } else {
+          templateUrl = _ALTERNATIVE_RESOURCES_PATH;
+        }
+      }
 
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
@@ -322,10 +340,15 @@ chrome.storage.local.get({
       if (isOkGithub) {
         templateUrl = _GITHUB_URL_TEMPLATE;
       } else {
-        templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+        if (items.baseUrl === _GOOGLESOURCE_SITE) {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+        } else {
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+        }
       }
 
       var url = templateUrl
+        .replace(/\$BASEURL/g, items.baseUrl)
         .replace(/\$PROJECT/g, pi.project.replace(/\//g, isOkGithub ? "_" : "/"))
         .replace(/\$TREE/g, pi.tree)
         .replace(/\$NAME_SLASH/g, outerNameSlash + '.java');
@@ -349,7 +372,17 @@ chrome.storage.local.get({
     document.querySelector('#jd-content').insertBefore(appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
 
-  var samplesUrl = github ? _GITHUB_SAMPLES_PATH : _GOOGLESOURCE_SAMPLES_PATH;
+  var samplesUrl;
+
+  if (github) {
+    samplesUrl = _GITHUB_SAMPLES_PATH;
+  } else {
+    if (items.url === _GOOGLESOURCE_SITE) {
+      samplesUrl = _GOOGLESOURCE_SAMPLES_PATH;
+    } else {
+      samplesUrl = _ALTERNATIVE_SAMPLES_PATH;
+    }
+  }
 
   // rewrite any direct links to sample code
   var sampleLinks = document.querySelectorAll('a[href*="/resources/samples"]');
