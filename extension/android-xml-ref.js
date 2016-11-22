@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// @formatter:off
+
 var XML_DATA = [
   { label:"AndroidManifest.xml", link:"guide/topics/manifest/manifest-intro.html", extraRank:1 },
 
@@ -57,7 +59,7 @@ var XML_DATA = [
 
   { subLabel:"Animation Resources", label:"<animation-list>", link:"guide/topics/resources/animation-resource.html#animation-list-element" },
 
-  { subLabel:"Animation Resources", label:"<accelerateDecelerateInterpolator>", link:"guide/topics/resources/animation-resource.html#Interpolators" },  
+  { subLabel:"Animation Resources", label:"<accelerateDecelerateInterpolator>", link:"guide/topics/resources/animation-resource.html#Interpolators" },
   { subLabel:"Animation Resources", label:"<accelerateInterpolator>", link:"guide/topics/resources/animation-resource.html#Interpolators" },
   { subLabel:"Animation Resources", label:"<anticipateInterpolator>", link:"guide/topics/resources/animation-resource.html#Interpolators" },
   { subLabel:"Animation Resources", label:"<anticipateOvershootInterpolator>", link:"guide/topics/resources/animation-resource.html#Interpolators" },

@@ -103,7 +103,7 @@ function loadScripts(urls, successFn, errorFn) {
   urls = urls || [];
   urls = urls.slice(); // clone
 
-  var _loadNext = function() {
+  var _loadNext = function () {
     var url = urls.shift();
     if (!url) {
       successFn();
@@ -121,8 +121,8 @@ function loadScripts(urls, successFn, errorFn) {
  * success and error callbacks.
  */
 function loadScript(url, successFn, errorFn) {
-  successFn = successFn || function(){};
-  errorFn = errorFn || function(){};
+  successFn = successFn || function () {};
+  errorFn = errorFn || function () {};
 
   if (!url) {
     errorFn('(no script)');
@@ -135,11 +135,11 @@ function loadScript(url, successFn, errorFn) {
   var scriptNode = document.createElement('script');
   scriptNode.type = 'text/javascript';
   scriptNode.src = url;
-  scriptNode.onload = scriptNode.onreadystatechange = function() {
+  scriptNode.onload = scriptNode.onreadystatechange = function () {
     if ((!scriptNode.readyState ||
-         'loaded' === scriptNode.readyState ||
-         'complete' === scriptNode.readyState)
-        && !loadComplete) {
+      'loaded' === scriptNode.readyState ||
+      'complete' === scriptNode.readyState)
+      && !loadComplete) {
       scriptNode.onload = scriptNode.onreadystatechange = null;
       if (headNode && scriptNode.parentNode) {
         headNode.removeChild(scriptNode);
@@ -148,8 +148,8 @@ function loadScript(url, successFn, errorFn) {
       loadComplete = true;
       successFn();
     }
-  }
-  scriptNode.onerror = function() {
+  };
+  scriptNode.onerror = function () {
     if (!loadComplete) {
       loadComplete = true;
       errorFn(url);
@@ -170,11 +170,11 @@ function onScriptsLoaded() {
   });
 
   chrome.omnibox.onInputChanged.addListener(
-    function(query, suggestFn) {
+    function (query, suggestFn) {
       if (!query)
         return;
-  
-      suggestFn = suggestFn || function(){};
+
+      suggestFn = suggestFn || function () { };
       query = query.replace(/(^ +)|( +$)/g, '');
 
       var queryPartsLower = query.toLowerCase().match(/[^\s]+/g) || [];
@@ -209,8 +209,8 @@ function onScriptsLoaded() {
       // (highlighting, etc.).
       var capitalLetterRE = new RegExp(/[A-Z]/);
       var queryLower = query.toLowerCase();
-      var queryAlnumDotParts = queryLower.match(/[\&\;\-\w\.]+/g) || [''];
-      var queryREs = queryAlnumDotParts.map(function(q) {
+      var queryAlnumDotParts = queryLower.match(/[&;\-\w\.]+/g) || [''];
+      var queryREs = queryAlnumDotParts.map(function (q) {
         return new RegExp('(' + q.replace(/\./g, '\\.') + ')', 'ig');
       });
 
@@ -237,14 +237,14 @@ function onScriptsLoaded() {
         }
 
         // Remove HTML tags from description since omnibox cannot display them.
-        description = description.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+        description = description.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         // Convert special markers to Omnibox XML
         description = description
-            .replace(/\%\{/g, '<dim>')
-            .replace(/\}\%/g, '</dim>')
-            .replace(/\%\|/g, '<match>')
-            .replace(/\|\%/g, '</match>');
+          .replace(/%\{/g, '<dim>')
+          .replace(/}%/g, '</dim>')
+          .replace(/%\|/g, '<match>')
+          .replace(/\|%/g, '</match>');
 
         omniboxResults.push({
           content: 'https://developer.android.com/' + result.link,
@@ -256,19 +256,19 @@ function onScriptsLoaded() {
     }
   );
 
-  chrome.omnibox.onInputEntered.addListener(function(text) {
+  chrome.omnibox.onInputEntered.addListener(function (text) {
     if (text.match(/^https?\:/)) {
       navigateToUrl(text);
     } else {
       navigateToUrl('https://developer.android.com/index.html#q=' +
-          encodeURIComponent(text));
+        encodeURIComponent(text));
     }
   });
 }
 
 
 function navigateToUrl(url) {
-  chrome.tabs.getSelected(null, function(tab) {
+  chrome.tabs.getSelected(null, function (tab) {
     chrome.tabs.update(tab.id, {url: url});
   });
 }
@@ -298,7 +298,7 @@ function regexFindLast(s, re) {
  */
 function countChars(s, c) {
   var n = 0;
-  for (var i=0; i<s.length; i++)
+  for (var i = 0; i < s.length; i++)
     if (s.charAt(i) == c) ++n;
   return n;
 }
@@ -327,7 +327,7 @@ function rankResults(matches, query) {
     matches[i].__resultScore = totalScore;
   }
 
-  matches.sort(function(a, b) {
+  matches.sort(function (a, b) {
     var n = b.__resultScore - a.__resultScore;
     if (n == 0) // lexicographical sort if scores are the same
       n = (a.label < b.label) ? -1 : 1;

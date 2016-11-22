@@ -170,12 +170,12 @@ function getTestingSupportLibraryInfo(packageName) {
       folder = suffix.replace(/\./, '/');
     }
   }
-  return { suffix : suffix, folder : folder };
+  return {suffix: suffix, folder: folder};
 }
 
 chrome.storage.local.get({
   baseUrl: 'https://android.googlesource.com'
-}, function(items) {
+}, function (items) {
   var url = window.location.href;
   var appendContent;
 
@@ -186,12 +186,11 @@ chrome.storage.local.get({
 
     var pi = getPackageInfo(packageName);
     if (pi) {
-      var url =
-          _GOOGLESOURCE_URL_TEMPLATE
-              .replace(/\$BASEURL/g, items.baseUrl)
-              .replace(/\$PROJECT/g, pi.project)
-              .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, nameSlash);
+      var url = _GOOGLESOURCE_URL_TEMPLATE
+        .replace(/\$BASEURL/g, items.baseUrl)
+        .replace(/\$PROJECT/g, pi.project)
+        .replace(/\$TREE/g, pi.tree)
+        .replace(/\$NAME_SLASH/g, nameSlash);
 
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
       if (espressoInfo != null) {
@@ -208,13 +207,12 @@ chrome.storage.local.get({
         } else {
           urlPattern = 'base/+/refs/heads/master/core/java/android/support/test';
         }
-        url = url.replace(urlPattern,
-               'testing/+/android-support-test/');
+        url = url.replace(urlPattern, 'testing/+/android-support-test/');
         url += folder + '/src/main/java/android/support/test/' + suffix;
       }
 
       appendContent = [
-          '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
+        '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
       ].join('');
     }
 
@@ -230,11 +228,11 @@ chrome.storage.local.get({
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
         appendContent += [
-            '<a class="__asdk_search_extension_link__" href="',
-            _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
-            '">view res/',
-            resPath.replace(/\/$/,''),
-            '</a>'
+          '<a class="__asdk_search_extension_link__" href="',
+          _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
+          '">view res/',
+          resPath.replace(/\/$/, ''),
+          '</a>'
         ].join('');
       }
     }
@@ -256,22 +254,20 @@ chrome.storage.local.get({
       }
     }
     if (pi) {
-      var url =
-          _GOOGLESOURCE_URL_TEMPLATE
-              .replace(/\$BASEURL/g, items.baseUrl)
-              .replace(/\$PROJECT/g, pi.project)
-              .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
+      var url = _GOOGLESOURCE_URL_TEMPLATE
+        .replace(/\$BASEURL/g, items.baseUrl)
+        .replace(/\$PROJECT/g, pi.project)
+        .replace(/\$TREE/g, pi.tree)
+        .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
 
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
       if (espressoInfo != null) {
-         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/',
-             'testing/+/android-support-test/'
-                 + espressoInfo.folder + '/src/main/java/android/support/test/');
+        url = url.replace('base/+/refs/heads/master/core/java/android/support/test/', 'testing/+/android-support-test/'
+          + espressoInfo.folder + '/src/main/java/android/support/test/');
       }
 
       appendContent = [
-          '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
+        '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
       ].join('');
     }
 
@@ -281,8 +277,7 @@ chrome.storage.local.get({
     var appendNode = document.createElement('div');
     appendNode.classList.add('__asdk_search_extension_link_container__');
     appendNode.innerHTML = appendContent;
-    document.querySelector('#jd-content').insertBefore(
-        appendNode, document.querySelector('#jd-content h1').nextSibling);
+    document.querySelector('#jd-content').insertBefore(appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
 
   // rewrite any direct links to sample code

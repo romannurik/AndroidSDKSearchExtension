@@ -32,7 +32,9 @@
     }
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "options_ui": {
     "page": "options.html",
