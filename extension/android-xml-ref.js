@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// @formatter:off
-
 var XML_DATA = [
   { label:"AndroidManifest.xml", link:"guide/topics/manifest/manifest-intro.html", extraRank:1 },
 

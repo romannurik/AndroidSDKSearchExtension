@@ -29,7 +29,6 @@ var _GITHUB_URL_TEMPLATE = _GITHUB_SITE + '/android/$PROJECT/blob/master/$TREE/$
 var _GITHUB_RESOURCES_PATH = _GITHUB_SITE + '/android/platform_frameworks_$PROJECT/tree/master/$TREE/';
 var _GITHUB_SAMPLES_PATH = _GITHUB_SITE + '/android/platform_development/tree/master/samples';
 
-// @formatter:off
 var _RESOURCE_MAP = {
   'R'               : '',
   'R.anim'          : 'anim/',
@@ -53,9 +52,7 @@ var _RESOURCE_MAP = {
   'R.styleable'     : 'values/attrs.xml',
   'R.xml'           : 'xml/'
 };
-// @formatter:on
 
-// @formatter:off
 var _PACKAGE_MAP = {
   'java'                                 : { project: 'platform/libcore',             tree: 'ojluni/src/main/java' },
   'javax'                                : { project: 'platform/libcore',             tree: 'ojluni/src/main/java' },
@@ -109,7 +106,6 @@ var _PACKAGE_MAP = {
   'android.support.v14.preference'       : { project: 'platform/frameworks/support',  tree: 'v14/preference/src' },
   'android.support.wearable'             : { project: null,  tree: null }
 };
-// @formatter:on
 
 var _TREE_REFINEMENTS = {
   'android.support.v7.app': [
