@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+)\/package-(summary|descr).html/;
-var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+).html/;
-var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/android\/(R(?:\..+)?).html/;
+var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\/package-(summary|descr)\.html/;
+var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\.html/;
+var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)\.html/;
 
 var _GOOGLESOURCE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
-var _GOOGLESOURCE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
+var _GOOGLESOURCE_RESOURCES_PATH = '$BASEURL/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
 
+// @formatter:off
 var _RESOURCE_MAP = {
   'R'               : '',
   'R.anim'          : 'anim/',
@@ -45,7 +46,9 @@ var _RESOURCE_MAP = {
   'R.styleable'     : 'values/attrs.xml',
   'R.xml'           : 'xml/'
 };
+// @formatter:on
 
+// @formatter:off
 var _PACKAGE_MAP = {
   'java'                                 : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
   'javax'                                : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
@@ -81,6 +84,7 @@ var _PACKAGE_MAP = {
   'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
 };
+// @formatter:on
 
 var _TREE_REFINEMENTS = {
   'android.support.v7.app': [
@@ -116,14 +120,14 @@ var _ATSL_PACKAGE_PREFIX = 'android.support.test';
  * NB: Order is important
  */
 var _ATSL_FOLDER_MAP = {
-  'espresso.contrib' : 'espresso/contrib',
-  'espresso.intent' : 'espresso/intents',
-  'espresso.web' : 'espresso/web',
-  'espresso' : 'espresso/core',
-  'rule' : 'rules',
-  'annotation' : 'rules', // only for UiThreadTest
-  'filters' : 'runner',
-  'uiautomator' : 'uiautomator_test_libraries',
+  'espresso.contrib': 'espresso/contrib',
+  'espresso.intent': 'espresso/intents',
+  'espresso.web': 'espresso/web',
+  'espresso': 'espresso/core',
+  'rule': 'rules',
+  'annotation': 'rules', // only for UiThreadTest
+  'filters': 'runner',
+  'uiautomator': 'uiautomator_test_libraries',
 };
 
 function trimLastNamePart(s) {
@@ -145,6 +149,10 @@ function getPackageInfo(packageName) {
     tmpPackageName = trimLastNamePart(tmpPackageName);
   }
   return null;
+}
+
+function getSupportPackageName(url) {
+  return url.replace(/.+android\/support\//g, '').replace(/\/R.+/g, '')
 }
 
 function getTestingSupportLibraryInfo(packageName) {
@@ -225,11 +233,21 @@ chrome.storage.local.get({
         destinations = [destinations];
       }
       appendContent = '';
+
+      var project = 'base';
+      var tree = 'core/res/res';
+      if (url.indexOf('support') !== -1) {
+        project = 'support';
+        tree = getSupportPackageName(url) + '/res';
+      }
+
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
         appendContent += [
           '<a class="__asdk_search_extension_link__" href="',
-          _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
+          _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl)
+            .replace(/\$PROJECT/g, project)
+            .replace(/\$TREE/g, tree) + resPath,
           '">view res/',
           resPath.replace(/\/$/, ''),
           '</a>'
