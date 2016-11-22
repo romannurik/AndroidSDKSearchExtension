@@ -11,10 +11,17 @@
 
 <body>
 
-<label>
     Source base URL:
-    <input type="text" id="baseurl">
-</label>
+      <form action="">
+          <label>
+              <input type="radio" name="baseurl" id="googlesource" value="https://android.googlesource.com"/>
+          </label> https://android.googlesource.com
+          <br>
+          <label>
+              <input type="radio" name="baseurl" id="github" value="https://github.com"/>
+          </label> https://github.com
+          <br>
+      </form>
 
 <div id="status"></div>
 
