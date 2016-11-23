@@ -74,16 +74,17 @@ var _PACKAGE_MAP = {
   'android.graphics'                     : { project: 'platform/frameworks/base',     tree: 'graphics/java' },
   'android.icu'                          : { project: 'platform/frameworks/base',     tree: 'icu4j/java' },
   'android.security'                     : { project: 'platform/frameworks/base',     tree: 'keystore/java' },
-  'android.system'                       : { project: null,                           tree: null },
+  'android.system'                       : { project: 'platform/libcore',             tree: 'luni/src/main/java' },
   'android.location'                     : { project: 'platform/frameworks/base',     tree: 'location/java' },
   'android.media'                        : { project: 'platform/frameworks/base',     tree: 'media/java' },
   'android.media.effect'                 : { project: 'platform/frameworks/base',     tree: 'media/mca/effect/java' },
   'android.mtp'                          : { project: 'platform/frameworks/base',     tree: 'media/java' },
   'android.opengl'                       : { project: 'platform/frameworks/base',     tree: 'opengl/java' },
   'android.sax'                          : { project: 'platform/frameworks/base',     tree: 'sax/java' },
+  'android.telecom'                      : { project: 'platform/frameworks/base',     tree: 'telecomm/java' },
   'android.telephony'                    : { project: 'platform/frameworks/base',     tree: 'telephony/java' },
-  'android.net.rtp'                      : { project: 'platform/frameworks/base',     tree: 'voip/java' },
-  'android.net.sip'                      : { project: 'platform/frameworks/base',     tree: 'voip/java' },
+  'android.net.rtp'                      : { project: 'platform/frameworks/opt/net/voip',     tree: 'src/java/' },
+  'android.net.sip'                      : { project: 'platform/frameworks/opt/net/voip',     tree: 'src/java' },
   'android.net.wifi'                     : { project: 'platform/frameworks/base',     tree: 'wifi/java' },
   'android.support.annotation'           : { project: 'platform/frameworks/support',  tree: 'annotations/src' },
   'android.support.annotations'          : { project: null,  tree: null },
@@ -94,8 +95,8 @@ var _PACKAGE_MAP = {
   'android.support.customtabs'           : { project: 'platform/frameworks/support',  tree: 'customtabs/src' },
   'android.support.design'               : { project: 'platform/frameworks/support',  tree: 'design/src' },
   'android.support.fragment'             : { project: null,  tree: null },
-  'android.support.graphics.drawable'    : { project: null,  tree: null },
-  'android.support.multidex'             : { project: null,  tree: null },
+  'android.support.graphics.drawable'    : { project: 'platform/frameworks/support',  tree: 'graphics/drawable/animated/src' },
+  'android.support.multidex'             : { project: 'platform/frameworks/multidex', tree: 'library/src' },
   'android.support.mediacompat'          : { project: null,  tree: null },
   'android.support.percent'              : { project: 'platform/frameworks/support',  tree: 'percent/src' },
   'android.support.provider'             : { project: null,  tree: null },
@@ -216,8 +217,6 @@ chrome.storage.local.get({
   var url = window.location.href;
   var appendContent;
 
-  var github = items.baseUrl === _GITHUB_SITE;
-
   var m;
   if (m = url.match(_PACKAGE_DOC_URL_REGEX)) {
     var nameSlash = m[1];
@@ -228,15 +227,23 @@ chrome.storage.local.get({
       var templateUrl;
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
 
-      var isOkGithub = github && espressoInfo == null && isPackageAvailableGithub(pi);
-      if (isOkGithub) {
-        templateUrl = _GITHUB_URL_TEMPLATE;
-      } else {
-        if (items.baseUrl === _GOOGLESOURCE_SITE) {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
-        } else {
-          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+      switch (items.baseUrl) {
+        case _GITHUB_SITE:
+        {
+          var isOkGithub = espressoInfo == null && isPackageAvailableGithub(pi);
+          if (isOkGithub) {
+            templateUrl = _GITHUB_URL_TEMPLATE;
+            break;
+          }
         }
+        case _GOOGLESOURCE_SITE:
+        {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+          break;
       }
 
       var url = templateUrl
@@ -291,15 +298,20 @@ chrome.storage.local.get({
         if (_PACKAGE_MAP[packageName].project == null) return;
       }
 
-      var templateUrl;
-      if (github) {
-        templateUrl = _GITHUB_RESOURCES_PATH;
-      } else {
-        if (items.baseUrl === _GOOGLESOURCE_SITE) {
-          templateUrl = _GOOGLESOURCE_RESOURCES_PATH;
-        } else {
-          templateUrl = _ALTERNATIVE_RESOURCES_PATH;
+      switch (items.baseUrl) {
+        case _GITHUB_SITE:
+        {
+          templateUrl = _GITHUB_RESOURCES_PATH;
+          break;
         }
+        case _GOOGLESOURCE_SITE:
+        {
+          templateUrl = _GOOGLESOURCE_RESOURCES_PATH;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_RESOURCES_PATH;
+          break;
       }
 
       for (var i = 0; i < destinations.length; i++) {
@@ -336,15 +348,23 @@ chrome.storage.local.get({
       var templateUrl;
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
 
-      var isOkGithub = github && espressoInfo == null && isPackageAvailableGithub(pi);
-      if (isOkGithub) {
-        templateUrl = _GITHUB_URL_TEMPLATE;
-      } else {
-        if (items.baseUrl === _GOOGLESOURCE_SITE) {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
-        } else {
-          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+      switch (items.baseUrl) {
+        case _GITHUB_SITE:
+        {
+          var isOkGithub = espressoInfo == null && isPackageAvailableGithub(pi);
+          if (isOkGithub) {
+            templateUrl = _GITHUB_URL_TEMPLATE;
+            break;
+          }
         }
+        case _GOOGLESOURCE_SITE:
+        {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+          break;
       }
 
       var url = templateUrl
@@ -374,14 +394,20 @@ chrome.storage.local.get({
 
   var samplesUrl;
 
-  if (github) {
-    samplesUrl = _GITHUB_SAMPLES_PATH;
-  } else {
-    if (items.url === _GOOGLESOURCE_SITE) {
-      samplesUrl = _GOOGLESOURCE_SAMPLES_PATH;
-    } else {
-      samplesUrl = _ALTERNATIVE_SAMPLES_PATH;
+  switch (items.baseUrl) {
+    case _GITHUB_SITE:
+    {
+      samplesUrl = _GITHUB_SAMPLES_PATH;
+      break;
     }
+    case _GOOGLESOURCE_SITE:
+    {
+      samplesUrl = _GOOGLESOURCE_SAMPLES_PATH;
+      break;
+    }
+    default:
+      samplesUrl = _ALTERNATIVE_SAMPLES_PATH;
+      break;
   }
 
   // rewrite any direct links to sample code
