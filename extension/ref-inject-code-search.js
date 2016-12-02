@@ -106,6 +106,7 @@ var _PACKAGE_MAP = {
   'android.support.v7.media'             : { project: 'platform/frameworks/support',  tree: 'v7/mediarouter/src' },
   'android.support.v7.graphics'          : { project: 'platform/frameworks/support',  tree: 'v7/palette/src' },
   'android.support.v7.preference'        : { project: 'platform/frameworks/support',  tree: 'v7/preference/src' },
+  'android.support.v8.renderscript'      : { project: 'platform/frameworks/support',  tree: 'v8/renderscript/java/src' },
   'android.support.v13'                  : { project: 'platform/frameworks/support',  tree: 'v13/java' },
   'android.support.v17.leanback'         : { project: 'platform/frameworks/support',  tree: 'v17/leanback/src' },
   'android.support.v14.preference'       : { project: 'platform/frameworks/support',  tree: 'v14/preference/src' },
@@ -153,7 +154,7 @@ var _ATSL_FOLDER_MAP = {
   'rule': 'rules',
   'annotation': 'rules', // only for UiThreadTest
   'filters': 'runner',
-  'uiautomator': 'uiautomator_test_libraries',
+  'uiautomator': 'uiautomator_test_libraries'
 };
 
 function trimLastNamePart(s) {
