@@ -147,14 +147,14 @@ var _ATSL_PACKAGE_PREFIX = 'android.support.test';
  * NB: Order is important
  */
 var _ATSL_FOLDER_MAP = {
-  'espresso.contrib': 'espresso/contrib',
-  'espresso.intent': 'espresso/intents',
-  'espresso.web': 'espresso/web',
-  'espresso': 'espresso/core',
-  'rule': 'rules',
-  'annotation': 'rules', // only for UiThreadTest
-  'filters': 'runner',
-  'uiautomator': 'uiautomator_test_libraries'
+  'espresso.contrib' : 'espresso/contrib',
+  'espresso.intent' : 'espresso/intents',
+  'espresso.web' : 'espresso/web',
+  'espresso' : 'espresso/core',
+  'rule' : 'rules',
+  'annotation' : 'rules', // only for UiThreadTest
+  'filters' : 'runner',
+  'uiautomator' : 'uiautomator_test_libraries',
 };
 
 function trimLastNamePart(s) {
@@ -209,12 +209,12 @@ function getTestingSupportLibraryInfo(packageName) {
       folder = suffix.replace(/\./, '/');
     }
   }
-  return {suffix: suffix, folder: folder};
+  return { suffix : suffix, folder : folder };
 }
 
 chrome.storage.local.get({
   baseUrl: _GOOGLESOURCE_SITE
-}, function (items) {
+}, function(items) {
   var url = window.location.href;
   var appendContent;
 
@@ -267,12 +267,13 @@ chrome.storage.local.get({
         } else {
           urlPattern = 'base/+/refs/heads/master/core/java/android/support/test';
         }
-        url = url.replace(urlPattern, 'testing/+/android-support-test/');
+        url = url.replace(urlPattern,
+               'testing/+/android-support-test/');
         url += folder + '/src/main/java/android/support/test/' + suffix;
       }
 
       appendContent = [
-        '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
+          '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
       ].join('');
     }
 
@@ -375,12 +376,13 @@ chrome.storage.local.get({
         .replace(/\$NAME_SLASH/g, outerNameSlash + '.java');
 
       if (espressoInfo != null) {
-        url = url.replace('base/+/refs/heads/master/core/java/android/support/test/', 'testing/+/android-support-test/'
-          + espressoInfo.folder + '/src/main/java/android/support/test/');
+         url = url.replace('base/+/refs/heads/master/core/java/android/support/test/',
+             'testing/+/android-support-test/'
+                 + espressoInfo.folder + '/src/main/java/android/support/test/');
       }
 
       appendContent = [
-        '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
+          '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
       ].join('');
     }
 
@@ -390,7 +392,8 @@ chrome.storage.local.get({
     var appendNode = document.createElement('div');
     appendNode.classList.add('__asdk_search_extension_link_container__');
     appendNode.innerHTML = appendContent;
-    document.querySelector('#jd-content').insertBefore(appendNode, document.querySelector('#jd-content h1').nextSibling);
+    document.querySelector('#jd-content').insertBefore(
+        appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
 
   var samplesUrl;
