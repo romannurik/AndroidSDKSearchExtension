@@ -315,13 +315,13 @@ chrome.storage.local.get({
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
         appendContent += [
-          '<a class="__asdk_search_extension_link__" href="',
-              templateUrl.replace(/\$BASEURL/g, items.baseUrl)
+            '<a class="__asdk_search_extension_link__" href="',
+            templateUrl.replace(/\$BASEURL/g, items.baseUrl)
                 .replace(/\$PROJECT/g, project)
                 .replace(/\$TREE/g, tree) + resPath,
-              '">view res/',
-              resPath.replace(/\/$/, ''),
-              '</a>'
+            '">view res/',
+            resPath.replace(/\/$/, ''),
+            '</a>'
         ].join('');
       }
     }
@@ -393,13 +393,11 @@ chrome.storage.local.get({
   var samplesUrl;
 
   switch (items.baseUrl) {
-    case _GITHUB_SITE:
-    {
+    case _GITHUB_SITE: {
       samplesUrl = _GITHUB_SAMPLES_PATH;
       break;
     }
-    case _GOOGLESOURCE_SITE:
-    {
+    case _GOOGLESOURCE_SITE: {
       samplesUrl = _GOOGLESOURCE_SAMPLES_PATH;
       break;
     }
