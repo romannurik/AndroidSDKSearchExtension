@@ -16,7 +16,7 @@
 
 var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\/package-(summary|descr)\.html/;
 var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\.html/;
-var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)\.html/;
+var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)\.html/;
 
 var _GOOGLESOURCE_SITE = "https://android.googlesource.com";
 var _GITHUB_SITE = "https://github.com";
@@ -41,7 +41,9 @@ var _RESOURCE_MAP = {
   'R.attr'          : 'values/attrs.xml',
   'R.bool'          : 'values/bools.xml',
   'R.color'         : 'values/colors.xml',
+  'android.R.color' : 'values/colors_material.xml',
   'R.dimen'         : 'values/dimens.xml',
+  'android.R.dimen' : 'values/dimens_material.xml',
   'R.drawable'      : ['drawable/', 'drawable-xxhdpi/'],
   'R.id'            : 'values/ids.xml',
   'R.integer'       : 'integers.xml',
@@ -53,64 +55,65 @@ var _RESOURCE_MAP = {
   'R.raw'           : 'raw/',
   'R.string'        : 'values/strings.xml',
   'R.style'         : ['values/styles.xml', 'values/themes.xml'],
+  'android.R.style' : ['values/styles_material.xml', 'values/themes_material.xml'],
   'R.styleable'     : 'values/attrs.xml',
   'R.xml'           : 'xml/'
 };
 
 var _PACKAGE_MAP = {
-  'java'                                 : { project:'platform/libcore',                      tree:'ojluni/src/main/java' },
-  'javax'                                : { project:'platform/libcore',                      tree:'ojluni/src/main/java' },
-  'javax.microedition'                   : { project:null,                                    tree:null },
-  'org'                                  : { project:'platform/libcore',                      tree:'luni/src/main/java' },
-  'org.json'                             : { project:null,                                    tree:null },
-  'org.xmlpull'                          : { project:null,                                    tree:null },
-  'org.apache.http'                      : { project:'platform/libcore',                      tree:'core/java' },
-  'java.math'                            : { project:'platform/libcore',                      tree:'luni/src/main/java' },
-  'java.util.concurrent'                 : { project:'platform/libcore',                      tree:'luni/src/main/java' },
-  'android'                              : { project:'platform/frameworks/base',              tree:'core/java' },
-  'android.drm'                          : { project:'platform/frameworks/base',              tree:'drm/java' },
-  'android.drm.mobile1'                  : { project:'platform/frameworks/base',              tree:'media/java' },
-  'android.renderscript'                 : { project:'platform/frameworks/base',              tree:'rs/java' },
-  'android.graphics'                     : { project:'platform/frameworks/base',              tree:'graphics/java' },
-  'android.icu'                          : { project:'platform/frameworks/base',              tree:'icu4j/java' },
-  'android.security'                     : { project:'platform/frameworks/base',              tree:'keystore/java' },
-  'android.system'                       : { project:'platform/libcore',                      tree:'luni/src/main/java' },
-  'android.location'                     : { project:'platform/frameworks/base',              tree:'location/java' },
-  'android.media'                        : { project:'platform/frameworks/base',              tree:'media/java' },
-  'android.media.effect'                 : { project:'platform/frameworks/base',              tree:'media/mca/effect/java' },
-  'android.mtp'                          : { project:'platform/frameworks/base',              tree:'media/java' },
-  'android.opengl'                       : { project:'platform/frameworks/base',              tree:'opengl/java' },
-  'android.sax'                          : { project:'platform/frameworks/base',              tree:'sax/java' },
-  'android.telecom'                      : { project:'platform/frameworks/base',              tree:'telecomm/java' },
-  'android.telephony'                    : { project:'platform/frameworks/base',              tree:'telephony/java' },
+  'java'                                 : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'javax'                                : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'javax.microedition'                   : { project:null,                           tree:null },
+  'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'org.json'                             : { project:null,                           tree:null },
+  'org.xmlpull'                          : { project:null,                           tree:null },
+  'org.apache.http'                      : { project:'platform/libcore',             tree:'core/java' },
+  'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'java.util.concurrent'                 : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
+  'android.drm'                          : { project:'platform/frameworks/base',     tree:'drm/java' },
+  'android.drm.mobile1'                  : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.renderscript'                 : { project:'platform/frameworks/base',     tree:'rs/java' },
+  'android.graphics'                     : { project:'platform/frameworks/base',     tree:'graphics/java' },
+  'android.icu'                          : { project:'platform/frameworks/base',     tree:'icu4j/java' },
+  'android.security'                     : { project:'platform/frameworks/base',     tree:'keystore/java' },
+  'android.system'                       : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'android.location'                     : { project:'platform/frameworks/base',     tree:'location/java' },
+  'android.media'                        : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.media.effect'                 : { project:'platform/frameworks/base',     tree:'media/mca/effect/java' },
+  'android.mtp'                          : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.opengl'                       : { project:'platform/frameworks/base',     tree:'opengl/java' },
+  'android.sax'                          : { project:'platform/frameworks/base',     tree:'sax/java' },
+  'android.telecom'                      : { project:'platform/frameworks/base',     tree:'telecomm/java' },
+  'android.telephony'                    : { project:'platform/frameworks/base',     tree:'telephony/java' },
   'android.net.rtp'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java/' },
   'android.net.sip'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java' },
-  'android.net.wifi'                     : { project:'platform/frameworks/base',              tree:'wifi/java' },
-  'android.support.annotation'           : { project:'platform/frameworks/support',           tree:'annotations/src' },
-  'android.support.annotations'          : { project:null,                                    tree:null },
-  'android.support.app.recommendation'   : { project:'platform/frameworks/support',           tree:'recommendation/src' },
-  'android.support.compat'               : { project:null,                                    tree:null },
-  'android.support.coreui'               : { project:null,                                    tree:null },
-  'android.support.coreutils'            : { project:null,                                    tree:null },
-  'android.support.customtabs'           : { project:'platform/frameworks/support',           tree:'customtabs/src' },
-  'android.support.design'               : { project:'platform/frameworks/support',           tree:'design/src' },
-  'android.support.fragment'             : { project:null,                                    tree:null },
-  'android.support.graphics.drawable'    : { project:'platform/frameworks/support',           tree:'graphics/drawable/animated/src' },
-  'android.support.multidex'             : { project:'platform/frameworks/multidex',          tree:'library/src' },
-  'android.support.mediacompat'          : { project:null,                                    tree:null },
-  'android.support.percent'              : { project:'platform/frameworks/support',           tree:'percent/src' },
-  'android.support.provider'             : { project:null,                                    tree:null },
-  'android.support.transition'           : { project:null,                                    tree:null },
-  'android.support.v4'                   : { project:'platform/frameworks/support',           tree:'v4/java' },
-  'android.support.v7'                   : { project:'platform/frameworks/support',           tree:'v7/appcompat/src' },
-  'android.support.v7.media'             : { project:'platform/frameworks/support',           tree:'v7/mediarouter/src' },
-  'android.support.v7.graphics'          : { project:'platform/frameworks/support',           tree:'v7/palette/src' },
-  'android.support.v7.preference'        : { project:'platform/frameworks/support',           tree:'v7/preference/src' },
-  'android.support.v8.renderscript'      : { project:'platform/frameworks/support',           tree:'v8/renderscript/java/src' },
-  'android.support.v13'                  : { project:'platform/frameworks/support',           tree:'v13/java' },
-  'android.support.v17.leanback'         : { project:'platform/frameworks/support',           tree:'v17/leanback/src' },
-  'android.support.v14.preference'       : { project:'platform/frameworks/support',           tree:'v14/preference/src' },
-  'android.support.wearable'             : { project:null,                                    tree:null }
+  'android.net.wifi'                     : { project:'platform/frameworks/base',     tree:'wifi/java' },
+  'android.support.annotation'           : { project:'platform/frameworks/support',  tree:'annotations/src' },
+  'android.support.annotations'          : { project:null,                           tree:null },
+  'android.support.app.recommendation'   : { project:'platform/frameworks/support',  tree:'recommendation/src' },
+  'android.support.compat'               : { project:null,                           tree:null },
+  'android.support.coreui'               : { project:null,                           tree:null },
+  'android.support.coreutils'            : { project:null,                           tree:null },
+  'android.support.customtabs'           : { project:'platform/frameworks/support',  tree:'customtabs/src' },
+  'android.support.design'               : { project:'platform/frameworks/support',  tree:'design/src' },
+  'android.support.fragment'             : { project:null,                           tree:null },
+  'android.support.graphics.drawable'    : { project:'platform/frameworks/support',  tree:'graphics/drawable/animated/src' },
+  'android.support.multidex'             : { project:'platform/frameworks/multidex', tree:'library/src' },
+  'android.support.mediacompat'          : { project:null,                           tree:null },
+  'android.support.percent'              : { project:'platform/frameworks/support',  tree:'percent/src' },
+  'android.support.provider'             : { project:null,                           tree:null },
+  'android.support.transition'           : { project:null,                           tree:null },
+  'android.support.v4'                   : { project:'platform/frameworks/support',  tree:'v4/java' },
+  'android.support.v7'                   : { project:'platform/frameworks/support',  tree:'v7/appcompat/src' },
+  'android.support.v7.media'             : { project:'platform/frameworks/support',  tree:'v7/mediarouter/src' },
+  'android.support.v7.graphics'          : { project:'platform/frameworks/support',  tree:'v7/palette/src' },
+  'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src' },
+  'android.support.v8.renderscript'      : { project:'platform/frameworks/support',  tree:'v8/renderscript/java/src' },
+  'android.support.v13'                  : { project:'platform/frameworks/support',  tree:'v13/java' },
+  'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
+  'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
+  'android.support.wearable'             : { project:null,                           tree:null }
 };
 
 var _TREE_REFINEMENTS = {
@@ -277,6 +280,9 @@ chrome.storage.local.get({
 
   } else if (m = url.match(_RESOURCE_DOC_URL_REGEX)) {
     var nameSlash = m[1];
+    if (url.indexOf('support') === -1) {
+      nameSlash = "android." + nameSlash;
+    }
     if (nameSlash in _RESOURCE_MAP) {
       var destinations = _RESOURCE_MAP[nameSlash];
       if (!destinations.splice) {

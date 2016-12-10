@@ -3,21 +3,23 @@
 <head>
 	<title>Options</title>
 	<style>
-		body { padding: 10px;	}
+		body: { padding: 10px; }
 	</style>
 </head>
 
 <body>
 
-Source base URL:
-<form action="">
+	Source base URL:
+	<br>
 	<label>
 		<input type="radio" name="baseurl" id="googlesource" value="https://android.googlesource.com"/>
-	</label> https://android.googlesource.com
+		https://android.googlesource.com
+	</label>
 	<br>
 	<label>
 		<input type="radio" name="baseurl" id="github" value="https://github.com"/>
-	</label> https://github.com
+		https://github.com
+	</label>
 	<br>
 	<label>
 		<input type="radio" name="baseurl" id="customCheck"/>
@@ -25,12 +27,11 @@ Source base URL:
 	<label>
 		<input type="text" name="baseUrl" id="customUrl"/>
 	</label>
-</form>
-<br>
-<div id="status"></div>
+	<br>
+	<div id="status"></div>
 
-<button id="save">Save</button>
+  <button id="save">Save</button>
 
-<script src="options.js"></script>
+  <script src="options.js"></script>
 </body>
 </html>

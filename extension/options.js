@@ -3,7 +3,9 @@ function save_options() {
   var customUrl = document.getElementById("customUrl").value;
 
   var url = document.querySelector('input:checked').value;
-  if (url === 'on') url = customUrl;
+  if (url === 'on') {
+    url = customUrl;
+  }
 
   chrome.storage.local.set({
     baseUrl: url
