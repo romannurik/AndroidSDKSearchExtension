@@ -408,7 +408,7 @@ chrome.storage.local.get({
       break;
     }
     default:
-      samplesUrl = _ALTERNATIVE_SAMPLES_PATH;
+      samplesUrl = _ALTERNATIVE_SAMPLES_PATH.replace(/\$BASEURL/g, items.baseUrl);
       break;
   }
 
