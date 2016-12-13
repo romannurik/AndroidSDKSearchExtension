@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+)\/package-(summary|descr).html/;
-var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/(.+).html/;
-var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?.android.com\/reference\/android\/(R(?:\..+)?).html/;
+var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\/package-(summary|descr)\.html/;
+var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\.html/;
+var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)\.html/;
 
-var _GOOGLESOURCE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
-var _GOOGLESOURCE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
-var _GOOGLESOURCE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
+var _GOOGLESOURCE_SITE = "https://android.googlesource.com";
+var _GITHUB_SITE = "https://github.com";
+
+var _ALTERNATIVE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
+var _ALTERNATIVE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
+var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
+
+var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
+var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
+var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
+
+var _GITHUB_URL_TEMPLATE = _GITHUB_SITE + '/android/$PROJECT/blob/master/$TREE/$NAME_SLASH';
+var _GITHUB_RESOURCES_PATH = _GITHUB_SITE + '/android/platform_frameworks_$PROJECT/tree/master/$TREE/';
+var _GITHUB_SAMPLES_PATH = _GITHUB_SITE + '/android/platform_development/tree/master/samples';
 
 var _RESOURCE_MAP = {
   'R'               : '',
@@ -29,8 +40,10 @@ var _RESOURCE_MAP = {
   'R.array'         : 'values/arrays.xml',
   'R.attr'          : 'values/attrs.xml',
   'R.bool'          : 'values/bools.xml',
-  'R.color'         : 'values/colors_material.xml',
-  'R.dimen'         : 'values/dimens_material.xml',
+  'R.color'         : 'values/colors.xml',
+  'android.R.color' : 'values/colors_material.xml',
+  'R.dimen'         : 'values/dimens.xml',
+  'android.R.dimen' : 'values/dimens_material.xml',
   'R.drawable'      : ['drawable/', 'drawable-xxhdpi/'],
   'R.id'            : 'values/ids.xml',
   'R.integer'       : 'integers.xml',
@@ -41,7 +54,8 @@ var _RESOURCE_MAP = {
   'R.plurals'       : 'values/strings.xml',
   'R.raw'           : 'raw/',
   'R.string'        : 'values/strings.xml',
-  'R.style'         : ['values/styles_material.xml', 'values/themes_material.xml'],
+  'R.style'         : ['values/styles.xml', 'values/themes.xml'],
+  'android.R.style' : ['values/styles_material.xml', 'values/themes_material.xml'],
   'R.styleable'     : 'values/attrs.xml',
   'R.xml'           : 'xml/'
 };
@@ -49,37 +63,57 @@ var _RESOURCE_MAP = {
 var _PACKAGE_MAP = {
   'java'                                 : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
   'javax'                                : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
-  'org'                                  : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
+  'javax.microedition'                   : { project:null,                           tree:null },
+  'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'org.json'                             : { project:null,                           tree:null },
+  'org.xmlpull'                          : { project:null,                           tree:null },
+  'org.apache.http'                      : { project:'platform/libcore',             tree:'core/java' },
   'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'java.util.concurrent'                 : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
   'android.drm'                          : { project:'platform/frameworks/base',     tree:'drm/java' },
   'android.drm.mobile1'                  : { project:'platform/frameworks/base',     tree:'media/java' },
-  'android.renderscript'                 : { project:'platform/frameworks/base',     tree:'graphics/java' },
+  'android.renderscript'                 : { project:'platform/frameworks/base',     tree:'rs/java' },
   'android.graphics'                     : { project:'platform/frameworks/base',     tree:'graphics/java' },
   'android.icu'                          : { project:'platform/frameworks/base',     tree:'icu4j/java' },
   'android.security'                     : { project:'platform/frameworks/base',     tree:'keystore/java' },
+  'android.system'                       : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android.location'                     : { project:'platform/frameworks/base',     tree:'location/java' },
   'android.media'                        : { project:'platform/frameworks/base',     tree:'media/java' },
+  'android.media.effect'                 : { project:'platform/frameworks/base',     tree:'media/mca/effect/java' },
   'android.mtp'                          : { project:'platform/frameworks/base',     tree:'media/java' },
   'android.opengl'                       : { project:'platform/frameworks/base',     tree:'opengl/java' },
   'android.sax'                          : { project:'platform/frameworks/base',     tree:'sax/java' },
+  'android.telecom'                      : { project:'platform/frameworks/base',     tree:'telecomm/java' },
   'android.telephony'                    : { project:'platform/frameworks/base',     tree:'telephony/java' },
-  'android.net.rtp'                      : { project:'platform/frameworks/base',     tree:'voip/java' },
-  'android.net.sip'                      : { project:'platform/frameworks/base',     tree:'voip/java' },
+  'android.net.rtp'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java/' },
+  'android.net.sip'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java' },
   'android.net.wifi'                     : { project:'platform/frameworks/base',     tree:'wifi/java' },
+  'android.support.annotation'           : { project:'platform/frameworks/support',  tree:'annotations/src' },
+  'android.support.annotations'          : { project:null,                           tree:null },
+  'android.support.app.recommendation'   : { project:'platform/frameworks/support',  tree:'recommendation/src' },
+  'android.support.compat'               : { project:null,                           tree:null },
+  'android.support.coreui'               : { project:null,                           tree:null },
+  'android.support.coreutils'            : { project:null,                           tree:null },
+  'android.support.customtabs'           : { project:'platform/frameworks/support',  tree:'customtabs/src' },
+  'android.support.design'               : { project:'platform/frameworks/support',  tree:'design/src' },
+  'android.support.fragment'             : { project:null,                           tree:null },
+  'android.support.graphics.drawable'    : { project:'platform/frameworks/support',  tree:'graphics/drawable/animated/src' },
+  'android.support.multidex'             : { project:'platform/frameworks/multidex', tree:'library/src' },
+  'android.support.mediacompat'          : { project:null,                           tree:null },
+  'android.support.percent'              : { project:'platform/frameworks/support',  tree:'percent/src' },
+  'android.support.provider'             : { project:null,                           tree:null },
+  'android.support.transition'           : { project:null,                           tree:null },
   'android.support.v4'                   : { project:'platform/frameworks/support',  tree:'v4/java' },
   'android.support.v7'                   : { project:'platform/frameworks/support',  tree:'v7/appcompat/src' },
   'android.support.v7.media'             : { project:'platform/frameworks/support',  tree:'v7/mediarouter/src' },
   'android.support.v7.graphics'          : { project:'platform/frameworks/support',  tree:'v7/palette/src' },
+  'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src' },
+  'android.support.v8.renderscript'      : { project:'platform/frameworks/support',  tree:'v8/renderscript/java/src' },
   'android.support.v13'                  : { project:'platform/frameworks/support',  tree:'v13/java' },
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
-  'android.support.design'               : { project:'platform/frameworks/support',  tree:'design/src' },
-  'android.support.customtabs'           : { project:'platform/frameworks/support',  tree:'customtabs/src' },
-  'android.support.percent'              : { project:'platform/frameworks/support',  tree:'percent/src' },
-  'android.support.app.recommendation'   : { project:'platform/frameworks/support',  tree:'recommendation/src' },
-  'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
+  'android.support.wearable'             : { project:null,                           tree:null }
 };
 
 var _TREE_REFINEMENTS = {
@@ -147,6 +181,14 @@ function getPackageInfo(packageName) {
   return null;
 }
 
+function getSupportPackageName(url) {
+  return url.replace(/.+android\/support\//g, '').replace(/\/R.+/g, '')
+}
+
+function isPackageAvailableGithub(packageInfo) {
+  return packageInfo.tree.indexOf('luni') === -1;
+}
+
 function getTestingSupportLibraryInfo(packageName) {
   if (packageName.indexOf(_ATSL_PACKAGE_PREFIX) != 0) {
     return null;
@@ -174,7 +216,7 @@ function getTestingSupportLibraryInfo(packageName) {
 }
 
 chrome.storage.local.get({
-  baseUrl: 'https://android.googlesource.com'
+  baseUrl: _GOOGLESOURCE_SITE
 }, function(items) {
   var url = window.location.href;
   var appendContent;
@@ -185,15 +227,33 @@ chrome.storage.local.get({
     var packageName = nameSlash.replace(/\//g, '.');
 
     var pi = getPackageInfo(packageName);
-    if (pi) {
-      var url =
-          _GOOGLESOURCE_URL_TEMPLATE
-              .replace(/\$BASEURL/g, items.baseUrl)
-              .replace(/\$PROJECT/g, pi.project)
-              .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, nameSlash);
-
+    if (pi && pi.project != null) {
+      var templateUrl;
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
+
+      switch (items.baseUrl) {
+        case _GITHUB_SITE: {
+          var isOkGithub = espressoInfo == null && isPackageAvailableGithub(pi);
+          if (isOkGithub) {
+            templateUrl = _GITHUB_URL_TEMPLATE;
+            break;
+          }
+        }
+        case _GOOGLESOURCE_SITE: {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+          break;
+      }
+
+      var url = templateUrl
+        .replace(/\$BASEURL/g, items.baseUrl)
+        .replace(/\$PROJECT/g, pi.project.replace(/\//g, isOkGithub ? "_" : "/"))
+        .replace(/\$TREE/g, pi.tree)
+        .replace(/\$NAME_SLASH/g, nameSlash);
+
       if (espressoInfo != null) {
         var suffix;
         if (espressoInfo.suffix != null) {
@@ -220,6 +280,9 @@ chrome.storage.local.get({
 
   } else if (m = url.match(_RESOURCE_DOC_URL_REGEX)) {
     var nameSlash = m[1];
+    if (url.indexOf('support') === -1) {
+      nameSlash = "android." + nameSlash;
+    }
     if (nameSlash in _RESOURCE_MAP) {
       var destinations = _RESOURCE_MAP[nameSlash];
       if (!destinations.splice) {
@@ -227,13 +290,43 @@ chrome.storage.local.get({
         destinations = [destinations];
       }
       appendContent = '';
+
+      var project = 'base';
+      var tree = 'core/res/res';
+      if (url.indexOf('support') !== -1) {
+        var packageName = getSupportPackageName(url);
+
+        project = 'support';
+        tree = packageName + '/res';
+
+        packageName = 'android.support.' + packageName;
+
+        if (_PACKAGE_MAP[packageName].project == null) return;
+      }
+
+      switch (items.baseUrl) {
+        case _GITHUB_SITE: {
+          templateUrl = _GITHUB_RESOURCES_PATH;
+          break;
+        }
+        case _GOOGLESOURCE_SITE: {
+          templateUrl = _GOOGLESOURCE_RESOURCES_PATH;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_RESOURCES_PATH;
+          break;
+      }
+
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
         appendContent += [
             '<a class="__asdk_search_extension_link__" href="',
-            _GOOGLESOURCE_RESOURCES_PATH.replace(/\$BASEURL/g, items.baseUrl) + resPath,
+            templateUrl.replace(/\$BASEURL/g, items.baseUrl)
+                .replace(/\$PROJECT/g, project)
+                .replace(/\$TREE/g, tree) + resPath,
             '">view res/',
-            resPath.replace(/\/$/,''),
+            resPath.replace(/\/$/, ''),
             '</a>'
         ].join('');
       }
@@ -255,15 +348,33 @@ chrome.storage.local.get({
         }
       }
     }
-    if (pi) {
-      var url =
-          _GOOGLESOURCE_URL_TEMPLATE
-              .replace(/\$BASEURL/g, items.baseUrl)
-              .replace(/\$PROJECT/g, pi.project)
-              .replace(/\$TREE/g, pi.tree)
-              .replace(/\$NAME_SLASH/g, outerNameSlash + '.java')
-
+    if (pi && pi.project != null) {
+      var templateUrl;
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
+
+      switch (items.baseUrl) {
+        case _GITHUB_SITE: {
+          var isOkGithub = espressoInfo == null && isPackageAvailableGithub(pi);
+          if (isOkGithub) {
+            templateUrl = _GITHUB_URL_TEMPLATE;
+            break;
+          }
+        }
+        case _GOOGLESOURCE_SITE: {
+          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          break;
+        }
+        default:
+          templateUrl = _ALTERNATIVE_URL_TEMPLATE;
+          break;
+      }
+
+      var url = templateUrl
+        .replace(/\$BASEURL/g, items.baseUrl)
+        .replace(/\$PROJECT/g, pi.project.replace(/\//g, isOkGithub ? "_" : "/"))
+        .replace(/\$TREE/g, pi.tree)
+        .replace(/\$NAME_SLASH/g, outerNameSlash + '.java');
+
       if (espressoInfo != null) {
          url = url.replace('base/+/refs/heads/master/core/java/android/support/test/',
              'testing/+/android-support-test/'
@@ -285,6 +396,22 @@ chrome.storage.local.get({
         appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
 
+  var samplesUrl;
+
+  switch (items.baseUrl) {
+    case _GITHUB_SITE: {
+      samplesUrl = _GITHUB_SAMPLES_PATH;
+      break;
+    }
+    case _GOOGLESOURCE_SITE: {
+      samplesUrl = _GOOGLESOURCE_SAMPLES_PATH;
+      break;
+    }
+    default:
+      samplesUrl = _ALTERNATIVE_SAMPLES_PATH.replace(/\$BASEURL/g, items.baseUrl);
+      break;
+  }
+
   // rewrite any direct links to sample code
   var sampleLinks = document.querySelectorAll('a[href*="/resources/samples"]');
   for (var i = 0; i < sampleLinks.length; i++) {
@@ -297,7 +424,7 @@ chrome.storage.local.get({
     } else if (classSuffix == codePath.slice(-classSuffix.length)) {
       codePath = codePath.slice(0, codePath.length - classSuffix.length) + '.java';
     }
-    link.href = _GOOGLESOURCE_SAMPLES_PATH.replace(/\$BASEURL/g, items.baseUrl) + codePath;
+    link.href = samplesUrl + codePath;
   }
 
 });

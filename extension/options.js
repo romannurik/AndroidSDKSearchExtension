@@ -1,6 +1,12 @@
 // Saves options to chrome.local.sync.
 function save_options() {
-  var url = document.getElementById('baseurl').value;
+  var customUrl = document.getElementById("customUrl").value;
+
+  var url = document.querySelector('input:checked').value;
+  if (url === 'on') {
+    url = customUrl;
+  }
+
   chrome.storage.local.set({
     baseUrl: url
   }, function() {
@@ -17,7 +23,14 @@ function restore_options() {
   chrome.storage.local.get({
     baseUrl: 'https://android.googlesource.com'
   }, function(items) {
-    document.getElementById('baseurl').value = items.baseUrl;
+    if (items.baseUrl === 'https://android.googlesource.com') {
+      document.getElementById("googlesource").checked = true;
+    } else if (items.baseUrl === 'https://github.com') {
+      document.getElementById("github").checked = true;
+    } else {
+      document.getElementById("customCheck").checked = true;
+      document.getElementById("customUrl").value = items.baseUrl;
+    }
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
