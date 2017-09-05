@@ -16,10 +16,8 @@
 
 var OMNIBOX_MAX_RESULTS = 20;
 var REFERENCE_JS_URLS = [
-  'https://developer.android.com/reference/lists.js',
-  // 'https://developer.android.com/reference/gcm_lists.js',
-  // 'https://developer.android.com/reference/gms_lists.js',
-  'https://developer.android.com/reference/jd_lists.js',
+  // per web store policy, don't externally load scripts
+  'android-ref.js', // 'd.a.c/reference/lists.js',
   'android-xml-ref.js'
 ];
 
@@ -41,10 +39,7 @@ chrome.omnibox.setDefaultSuggestion({
       return;
     }
 
-    DATA = DATA.map(processReferenceItem)
-    // DATA = DATA.concat(GMS_DATA.map(processReferenceItem));
-    // DATA = DATA.concat(GCM_DATA.map(processReferenceItem));
-    DATA = DATA.concat(JD_DATA.map(processDocsItem));
+    DATA = DATA.map(processReferenceItem);
     DATA = DATA.concat(XML_DATA.map(processXmlItem));
 
     console.log('Successfully loaded SDK reference JS.');
