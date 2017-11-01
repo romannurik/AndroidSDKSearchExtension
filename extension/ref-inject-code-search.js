@@ -115,16 +115,16 @@ var _PACKAGE_MAP = {
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
   'android.support.wearable'             : { project:null,                           tree:null },
-  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree: 'constraintlayout/src/main/java' },
-  //'android.arch.core.executor.testing'   : { project: '', tree: '' },
-  'android.arch.lifecycle'   : { project: 'platform/frameworks/support', tree: 'lifecycle/extensions/src/main/java' },
-  'android.arch.paging'   : { project: 'platform/frameworks/support', tree: 'paging/common/src/main/java' },
-  'android.arch.persistence.db' : { project: 'platform/frameworks/support', tree: 'room/db/src/main/java' },
-  'android.arch.persistence.db.framework' : { project: 'platform/frameworks/support', tree: 'room/db-impl/src/main/java' },
-  'android.arch.persistence.room' : { project: 'platform/frameworks/support', tree: 'room/common/src/main/java' },
-  'android.arch.persistence.room.migration' : { project: 'platform/frameworks/support', tree: 'room/runtime/src/main/java' },
-  'android.arch.persistence.room.testing' : { project: 'platform/frameworks/support', tree: 'room/testing/src/main/java' },
-  'android.support.v7.recyclerview.extensions' : { project: 'platform/frameworks/support', tree: 'paging/runtime/src/main/java' },
+  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree:'constraintlayout/src/main/java' },
+  //'android.arch.core.executor.testing' : { project:'',                            tree:'' },
+  'android.arch.lifecycle'               : { project:'platform/frameworks/support', tree:'lifecycle/extensions/src/main/java' },
+  'android.arch.paging'                  : { project:'platform/frameworks/support', tree:'paging/common/src/main/java' },
+  'android.arch.persistence.db'          : { project:'platform/frameworks/support', tree:'room/db/src/main/java' },
+  'android.arch.persistence.db.framework'    : { project:'platform/frameworks/support',      tree:'room/db-impl/src/main/java' },
+  'android.arch.persistence.room'        : { project:'platform/frameworks/support', tree:'room/common/src/main/java' },
+  'android.arch.persistence.room.migration'  : { project:'platform/frameworks/support',      tree:'room/runtime/src/main/java' },
+  'android.arch.persistence.room.testing'    : { project:'platform/frameworks/support',      tree:'room/testing/src/main/java' },
+  'android.support.v7.recyclerview.extensions'   : { project:'platform/frameworks/support',  tree:'paging/runtime/src/main/java' }
 };
 
 var _TREE_REFINEMENTS = {
