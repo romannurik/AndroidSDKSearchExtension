@@ -28,6 +28,7 @@ var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples'
 var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
 var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
+var _CONSTRAINT_LAYOUT_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/studio-3.0/$TREE/$NAME_SLASH';
 
 var _GITHUB_URL_TEMPLATE = _GITHUB_SITE + '/android/$PROJECT/blob/master/$TREE/$NAME_SLASH';
 var _GITHUB_RESOURCES_PATH = _GITHUB_SITE + '/android/platform_frameworks_$PROJECT/tree/master/$TREE/';
@@ -113,7 +114,8 @@ var _PACKAGE_MAP = {
   'android.support.v13'                  : { project:'platform/frameworks/support',  tree:'v13/java' },
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
-  'android.support.wearable'             : { project:null,                           tree:null }
+  'android.support.wearable'             : { project:null,                           tree:null },
+  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree: 'constraintlayout/src/main/java' }
 };
 
 var _TREE_REFINEMENTS = {
@@ -240,7 +242,11 @@ chrome.storage.local.get({
           }
         }
         case _GOOGLESOURCE_SITE: {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          if (packageName.indexOf('constraint') != -1) {
+            templateUrl = _CONSTRAINT_LAYOUT_URL_TEMPLATE;
+          } else {
+            templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          }
           break;
         }
         default:
@@ -361,7 +367,11 @@ chrome.storage.local.get({
           }
         }
         case _GOOGLESOURCE_SITE: {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          if (packageName.indexOf('constraint') != -1) {
+            templateUrl = _CONSTRAINT_LAYOUT_URL_TEMPLATE;
+          } else {
+            templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          }
           break;
         }
         default:

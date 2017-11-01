@@ -5695,6 +5695,14 @@ var DATA = [
       { id:5691, label:"org.xmlpull.v1.XmlPullParserFactory", link:"reference/org/xmlpull/v1/XmlPullParserFactory.html", type:"class", deprecated:"false" },
       { id:5692, label:"org.xmlpull.v1.XmlSerializer", link:"reference/org/xmlpull/v1/XmlSerializer.html", type:"class", deprecated:"false" },
       { id:5693, label:"org.xmlpull.v1.sax2", link:"reference/org/xmlpull/v1/sax2/package-summary.html", type:"package", deprecated:"false" },
-      { id:5694, label:"org.xmlpull.v1.sax2.Driver", link:"reference/org/xmlpull/v1/sax2/Driver.html", type:"class", deprecated:"false" }
+      { id:5694, label:"org.xmlpull.v1.sax2.Driver", link:"reference/org/xmlpull/v1/sax2/Driver.html", type:"class", deprecated:"false" },
+      { id:5695, label:"android.support.constraint", link:"reference/android/support/constraint/package-summary.html", type:"package", deprecated:"false" },
+      { id:5696, label:"android.support.constraint.Barrier", link:"reference/android/support/constraint/Barrier.html", type:"class", deprecated:"false" },
+      { id:5697, label:"android.support.constraint.ConstraintLayout", link:"reference/android/support/constraint/ConstraintLayout.html", type:"class", deprecated:"false" },
+      { id:5698, label:"android.support.constraint.ConstraintLayout.LayoutParams", link:"reference/android/support/constraint/ConstraintLayout.LayoutParams.html", type:"class", deprecated:"false" },
+      { id:5699, label:"android.support.constraint.ConstraintSet", link:"reference/android/support/constraint/ConstraintSet.html", type:"class", deprecated:"false" },
+      { id:5700, label:"android.support.constraint.Group", link:"reference/android/support/constraint/Group.html", type:"class", deprecated:"false" },
+      { id:5701, label:"android.support.constraint.Guideline", link:"reference/android/support/constraint/Guideline.html", type:"class", deprecated:"false" },
+      { id:5702, label:"android.support.constraint.Placeholder", link:"reference/android/support/constraint/Placeholder.html", type:"class", deprecated:"false" }
 
     ];
