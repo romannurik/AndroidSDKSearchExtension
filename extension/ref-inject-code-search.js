@@ -28,6 +28,7 @@ var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples'
 var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
 var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
+var _CONSTRAINT_LAYOUT_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/studio-3.0/$TREE/$NAME_SLASH';
 
 var _GITHUB_URL_TEMPLATE = _GITHUB_SITE + '/android/$PROJECT/blob/master/$TREE/$NAME_SLASH';
 var _GITHUB_RESOURCES_PATH = _GITHUB_SITE + '/android/platform_frameworks_$PROJECT/tree/master/$TREE/';
@@ -113,7 +114,17 @@ var _PACKAGE_MAP = {
   'android.support.v13'                  : { project:'platform/frameworks/support',  tree:'v13/java' },
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
-  'android.support.wearable'             : { project:null,                           tree:null }
+  'android.support.wearable'             : { project:null,                           tree:null },
+  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree: 'constraintlayout/src/main/java' },
+  //'android.arch.core.executor.testing'   : { project: '', tree: '' },
+  'android.arch.lifecycle'   : { project: 'platform/frameworks/support', tree: 'lifecycle/extensions/src/main/java' },
+  'android.arch.paging'   : { project: 'platform/frameworks/support', tree: 'paging/common/src/main/java' },
+  'android.arch.persistence.db' : { project: 'platform/frameworks/support', tree: 'room/db/src/main/java' },
+  'android.arch.persistence.db.framework' : { project: 'platform/frameworks/support', tree: 'room/db-impl/src/main/java' },
+  'android.arch.persistence.room' : { project: 'platform/frameworks/support', tree: 'room/common/src/main/java' },
+  'android.arch.persistence.room.migration' : { project: 'platform/frameworks/support', tree: 'room/runtime/src/main/java' },
+  'android.arch.persistence.room.testing' : { project: 'platform/frameworks/support', tree: 'room/testing/src/main/java' },
+  'android.support.v7.recyclerview.extensions' : { project: 'platform/frameworks/support', tree: 'paging/runtime/src/main/java' },
 };
 
 var _TREE_REFINEMENTS = {
@@ -140,7 +151,44 @@ var _TREE_REFINEMENTS = {
       regex: /GridLayout|\.Space$/, // must appear after GridLayoutManager
       tree: 'v7/gridlayout/src'
     }
+  ],
+  'android.arch.lifecycle': [
+    {
+      regex: /LifecycleRegistryOwner/,
+      tree: 'lifecycle/runtime/src/main/java'
+    },
+    {
+      regex: /Lifecycle|LifecycleObserver|LifecycleOwner|OnLifecycleEvent/,
+      tree: 'lifecycle/common/src/main/java'
+    }
+  ],
+  'android.arch.paging': [
+    {
+      regex: /DiffCallback/,
+      tree: 'paging/runtime/src/main/java'
+    }
+  ],
+  'android.arch.persistence.room': [
+    {
+      regex: /Rx|EmptyResultSetException/,
+      tree: 'room/rxjava2/src/main/java'
+    },
+    {
+      regex: /DatabaseConfiguration|InvalidationTracker|Room/,
+      tree: 'room/runtime/src/main/java'
+    }
   ]
+};
+
+var _NAME_REFINEMENTS = {
+  'android.arch.paging':  {
+      replace: '/arch/paging/',
+      with: '/arch/util/paging/'
+    },
+    'android.support.v7.recyclerview.extensions': {
+      replace: '/support/v7/recyclerview/extensions/',
+      with: '/arch/util/paging/'
+    }
 };
 
 var _ATSL_PACKAGE_PREFIX = 'android.support.test';
@@ -240,12 +288,21 @@ chrome.storage.local.get({
           }
         }
         case _GOOGLESOURCE_SITE: {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          if (packageName.indexOf('constraint') != -1) {
+            templateUrl = _CONSTRAINT_LAYOUT_URL_TEMPLATE;
+          } else {
+            templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          }
           break;
         }
         default:
           templateUrl = _ALTERNATIVE_URL_TEMPLATE;
           break;
+      }
+
+      if (packageName in _NAME_REFINEMENTS) {
+        var refinements = _NAME_REFINEMENTS[packageName];
+        outerNameSlash = outerNameSlash.replace(refinements.replace, refinements.with);
       }
 
       var url = templateUrl
@@ -348,6 +405,10 @@ chrome.storage.local.get({
         }
       }
     }
+    if (packageName in _NAME_REFINEMENTS) {
+      var refinements = _NAME_REFINEMENTS[packageName];
+      outerNameSlash = outerNameSlash.replace(refinements.replace, refinements.with);
+    }
     if (pi && pi.project != null) {
       var templateUrl;
       var espressoInfo = getTestingSupportLibraryInfo(packageName);
@@ -361,7 +422,11 @@ chrome.storage.local.get({
           }
         }
         case _GOOGLESOURCE_SITE: {
-          templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          if (packageName.indexOf('constraint') != -1) {
+            templateUrl = _CONSTRAINT_LAYOUT_URL_TEMPLATE;
+          } else {
+            templateUrl = _GOOGLESOURCE_URL_TEMPLATE;
+          }
           break;
         }
         default:
