@@ -115,7 +115,16 @@ var _PACKAGE_MAP = {
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
   'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
   'android.support.wearable'             : { project:null,                           tree:null },
-  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree: 'constraintlayout/src/main/java' }
+  'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree: 'constraintlayout/src/main/java' },
+  //'android.arch.core.executor.testing'   : { project: '', tree: '' },
+  'android.arch.lifecycle'   : { project: 'platform/frameworks/support', tree: 'lifecycle/extensions/src/main/java' },
+  'android.arch.paging'   : { project: 'platform/frameworks/support', tree: 'paging/common/src/main/java' },
+  'android.arch.persistence.db' : { project: 'platform/frameworks/support', tree: 'room/db/src/main/java' },
+  'android.arch.persistence.db.framework' : { project: 'platform/frameworks/support', tree: 'room/db-impl/src/main/java' },
+  'android.arch.persistence.room' : { project: 'platform/frameworks/support', tree: 'room/common/src/main/java' },
+  'android.arch.persistence.room.migration' : { project: 'platform/frameworks/support', tree: 'room/runtime/src/main/java' },
+  'android.arch.persistence.room.testing' : { project: 'platform/frameworks/support', tree: 'room/testing/src/main/java' },
+  'android.support.v7.recyclerview.extensions' : { project: 'platform/frameworks/support', tree: 'paging/runtime/src/main/java' },
 };
 
 var _TREE_REFINEMENTS = {
@@ -142,7 +151,44 @@ var _TREE_REFINEMENTS = {
       regex: /GridLayout|\.Space$/, // must appear after GridLayoutManager
       tree: 'v7/gridlayout/src'
     }
+  ],
+  'android.arch.lifecycle': [
+    {
+      regex: /LifecycleRegistryOwner/,
+      tree: 'lifecycle/runtime/src/main/java'
+    },
+    {
+      regex: /Lifecycle|LifecycleObserver|LifecycleOwner|OnLifecycleEvent/,
+      tree: 'lifecycle/common/src/main/java'
+    }
+  ],
+  'android.arch.paging': [
+    {
+      regex: /DiffCallback/,
+      tree: 'paging/runtime/src/main/java'
+    }
+  ],
+  'android.arch.persistence.room': [
+    {
+      regex: /Rx|EmptyResultSetException/,
+      tree: 'room/rxjava2/src/main/java'
+    },
+    {
+      regex: /DatabaseConfiguration|InvalidationTracker|Room/,
+      tree: 'room/runtime/src/main/java'
+    }
   ]
+};
+
+var _NAME_REFINEMENTS = {
+  'android.arch.paging':  {
+      replace: '/arch/paging/',
+      with: '/arch/util/paging/'
+    },
+    'android.support.v7.recyclerview.extensions': {
+      replace: '/support/v7/recyclerview/extensions/',
+      with: '/arch/util/paging/'
+    }
 };
 
 var _ATSL_PACKAGE_PREFIX = 'android.support.test';
@@ -254,6 +300,11 @@ chrome.storage.local.get({
           break;
       }
 
+      if (packageName in _NAME_REFINEMENTS) {
+        var refinements = _NAME_REFINEMENTS[packageName];
+        outerNameSlash = outerNameSlash.replace(refinements.replace, refinements.with);
+      }
+
       var url = templateUrl
         .replace(/\$BASEURL/g, items.baseUrl)
         .replace(/\$PROJECT/g, pi.project.replace(/\//g, isOkGithub ? "_" : "/"))
@@ -353,6 +404,10 @@ chrome.storage.local.get({
           break;
         }
       }
+    }
+    if (packageName in _NAME_REFINEMENTS) {
+      var refinements = _NAME_REFINEMENTS[packageName];
+      outerNameSlash = outerNameSlash.replace(refinements.replace, refinements.with);
     }
     if (pi && pi.project != null) {
       var templateUrl;
