@@ -105,15 +105,31 @@ var _PACKAGE_MAP = {
   'android.support.percent'              : { project:'platform/frameworks/support',  tree:'percent/src' },
   'android.support.provider'             : { project:null,                           tree:null },
   'android.support.transition'           : { project:null,                           tree:null },
-  'android.support.v4'                   : { project:'platform/frameworks/support',  tree:'v4/java' },
-  'android.support.v7'                   : { project:'platform/frameworks/support',  tree:'v7/appcompat/src' },
+  'android.support.v4'                   : { project:'platform/frameworks/support',  tree:'compat/src/main/java' },
+  'android.support.v4.content'           : { project:'platform/frameworks/support',  tree:'core-utils/src/main/java' },
+  'android.support.v4.math'              : { project:'platform/frameworks/support',  tree:'core-utils/src/main/java' },
+  'android.support.v4.media'             : { project:'platform/frameworks/support',  tree:'media-compat/java' },
+  'android.support.v4.print'             : { project:'platform/frameworks/support',  tree:'core-utils/src/main/java' },
+  'android.support.v4.provider'          : { project:'platform/frameworks/support',  tree:'core-utils/src/main/java' },
+  'android.support.v4.view.animation'    : { project:'platform/frameworks/support',  tree:'core-ui/src/main/java' },
+  'android.support.v4.widget'            : { project:'platform/frameworks/support',  tree:'core-ui/src/main/java' },
+  'android.support.v7'                   : { project:'platform/frameworks/support',  tree:'compat/src/main/java' },
+  'android.support.v7.app'               : { project:'platform/frameworks/support',  tree:'v7/appcompat/src/main/java' },
+  'android.support.v7.content.res'       : { project:'platform/frameworks/support',  tree:'v7/appcompat/src/main/java' },
+  'android.support.v7.graphics'          : { project:'platform/frameworks/support',  tree:'v7/palette/src/main/java' },
+  'android.support.v7.graphics.drawable' : { project:'platform/frameworks/support',  tree:'v7/appcompat/src/main/java' },
   'android.support.v7.media'             : { project:'platform/frameworks/support',  tree:'v7/mediarouter/src' },
-  'android.support.v7.graphics'          : { project:'platform/frameworks/support',  tree:'v7/palette/src' },
-  'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src' },
+  'android.support.v7.preference'        : { project:'platform/frameworks/support',  tree:'v7/preference/src/main/java' },
+  'android.support.v7.util'              : { project:'platform/frameworks/support',  tree:'v7/recyclerview/src/main/java' },
+  'android.support.v7.view'              : { project:'platform/frameworks/support',  tree:'v7/appcompat/src/main/java' },
+  'android.support.v7.widget'            : { project:'platform/frameworks/support',  tree:'v7/appcompat/src/main/java' },
+  'android.support.v7.widget.helper'     : { project:'platform/frameworks/support',  tree:'v7/recyclerview/src/main/java' },
+  'android.support.v7.widget.util'       : { project:'platform/frameworks/support',  tree:'v7/recyclerview/src/main/java' },
   'android.support.v8.renderscript'      : { project:'platform/frameworks/support',  tree:'v8/renderscript/java/src' },
   'android.support.v13'                  : { project:'platform/frameworks/support',  tree:'v13/java' },
+  'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src/main/java' },
   'android.support.v17.leanback'         : { project:'platform/frameworks/support',  tree:'v17/leanback/src' },
-  'android.support.v14.preference'       : { project:'platform/frameworks/support',  tree:'v14/preference/src' },
+  'android.support.v17.preference'       : { project:'platform/frameworks/support',  tree:'v17/preference-leanback/src' },
   'android.support.wearable'             : { project:null,                           tree:null },
   'android.support.constraint'           : { project:'platform/frameworks/opt/sherpa',        tree:'constraintlayout/src/main/java' },
   //'android.arch.core.executor.testing' : { project:'',                            tree:'' },
@@ -128,6 +144,60 @@ var _PACKAGE_MAP = {
 };
 
 var _TREE_REFINEMENTS = {
+  'android.support.v4.app': [
+    {
+      regex: /Fragment|Loader/,
+      tree: 'fragment/src/main/java'
+    },
+    {
+      regex: /ActionBarDrawerToggle/,
+      tree: 'core-ui/src/main/java'
+    },
+    {
+      regex: /TaskStackBuilder|AppLaunchChecker|FrameMetricsAggregator|NavUtils/,
+      tree: 'core-utils/src/main/java'
+    }
+  ],
+  'android.support.v4.content': [
+    {
+      regex: /Compat/,
+      tree: 'compat/src/main/java'
+    }
+  ],
+  'android.support.v4.graphics.drawable': [
+    {
+      regex: /RoundedBitmapDrawable/,
+      tree: 'core-utils/src/main/java'
+    }
+  ],
+  'android.support.v4.provider': [
+    {
+      regex: /Font/,
+      tree: 'compat/src/main/java'
+    }
+  ],
+  'android.support.v4.view': [
+    {
+      regex: /AbsSavedState|AsyncLayoutInflater|NestedScrollingChildHelper|NestedScrollingParentHelper|PagerAdapter|PagerTabStrip|PagerTitleStrip|ViewPager/,
+      tree: 'core-ui/src/main/java'
+    },
+    {
+      regex: /GravityCompat/,
+      tree: 'compat/src/main/java'
+    }
+  ],
+  'android.support.v4.view.animation': [
+    {
+      regex: /Path/,
+      tree: 'compat/src/main/java'
+    }
+  ],
+  'android.support.v4.widget': [
+    {
+      regex: /Compat/,
+      tree: 'compat/src/main/java'
+    }
+  ],
   'android.support.v7.app': [
     {
       regex: /MediaRoute/,
@@ -136,20 +206,20 @@ var _TREE_REFINEMENTS = {
   ],
   'android.support.v7.widget': [
     {
-      regex: /RecyclerView|DefaultItemAnimator|OrientationHelper|LinearSmoothScroller/,
-      tree: 'v7/recyclerview/src'
+      regex: /RecyclerView|ItemAnimator|OrientationHelper|LinearSmoothScroller|DividerItemDecoration|SnapHelper/,
+      tree: 'v7/recyclerview/src/main/java'
     },
     {
       regex: /(Linear|Grid|StaggeredGrid)LayoutManager/,
-      tree: 'v7/recyclerview/src'
+      tree: 'v7/recyclerview/src/main/java'
     },
     {
       regex: /CardView/,
-      tree: 'v7/cardview/src'
+      tree: 'v7/cardview/src/main/java'
     },
     {
       regex: /GridLayout|\.Space$/, // must appear after GridLayoutManager
-      tree: 'v7/gridlayout/src'
+      tree: 'v7/gridlayout/src/main/java'
     }
   ],
   'android.arch.lifecycle': [
