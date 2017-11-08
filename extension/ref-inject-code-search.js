@@ -70,7 +70,6 @@ var _PACKAGE_MAP = {
   'org.xmlpull'                          : { project:null,                           tree:null },
   'org.apache.http'                      : { project:'platform/libcore',             tree:'core/java' },
   'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
-  'java.util.concurrent'                 : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
   'android.drm'                          : { project:'platform/frameworks/base',     tree:'drm/java' },
   'android.drm.mobile1'                  : { project:'platform/frameworks/base',     tree:'media/java' },
