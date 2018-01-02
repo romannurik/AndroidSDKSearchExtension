@@ -99,7 +99,7 @@ var _PACKAGE_MAP = {
   'android.support.customtabs'           : { project:'platform/frameworks/support',  tree:'customtabs/src/main/java' },
   'android.support.design'               : { project:'platform/frameworks/support',  tree:'design/src' },
   'android.support.fragment'             : { project:null,                           tree:null },
-  'android.support.graphics.drawable'    : { project:'platform/frameworks/support',  tree:'graphics/drawable/animated/src/main/java' },
+  'android.support.graphics.drawable'    : { project:'platform/frameworks/support',  tree:'graphics/drawable/static/src/main/java' },
   'android.support.multidex'             : { project:'platform/frameworks/multidex', tree:'library/src' },
   'android.support.media'                : { project:'platform/frameworks/support',  tree:'exifinterface/src/main/java' },
   'android.support.media.tv'             : { project:'platform/frameworks/support',  tree:'tv-provider/src/main/java' },
@@ -149,6 +149,12 @@ var _PACKAGE_MAP = {
 };
 
 var _TREE_REFINEMENTS = {
+  'android.support.graphics.drawable': [
+    {
+      regex: /Animated|Animatable/,
+      tree: 'graphics/drawable/animated/src/main/java'
+    }
+  ],
   'android.support.v4.app': [
     {
       regex: /Fragment|Loader/,
