@@ -68,7 +68,7 @@ var _PACKAGE_MAP = {
   'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'org.json'                             : { project:null,                           tree:null },
   'org.xmlpull'                          : { project:null,                           tree:null },
-  'org.apache.http'                      : { project:'platform/libcore',             tree:'core/java' },
+  'org.apache.http'                      : { project:'platform/frameworks/base',     tree:'core/java' },
   'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
   'android.drm'                          : { project:'platform/frameworks/base',     tree:'drm/java' },
