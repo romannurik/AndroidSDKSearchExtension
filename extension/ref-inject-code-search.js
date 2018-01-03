@@ -75,7 +75,7 @@ var _PACKAGE_MAP = {
   'android.drm.mobile1'                  : { project:'platform/frameworks/base',     tree:'media/java' },
   'android.renderscript'                 : { project:'platform/frameworks/base',     tree:'rs/java' },
   'android.graphics'                     : { project:'platform/frameworks/base',     tree:'graphics/java' },
-  'android.icu'                          : { project:'platform/frameworks/base',     tree:'icu4j/java' },
+  'android.icu'                          : { project:'platform/external/icu',        tree:'android_icu4j/src/main/java' },
   'android.security'                     : { project:'platform/frameworks/base',     tree:'keystore/java' },
   'android.system'                       : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android.location'                     : { project:'platform/frameworks/base',     tree:'location/java' },
