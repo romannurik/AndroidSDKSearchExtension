@@ -67,7 +67,7 @@ var _PACKAGE_MAP = {
   'javax.microedition'                   : { project:null,                           tree:null },
   'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'org.json'                             : { project:null,                           tree:null },
-  'org.xmlpull'                          : { project:null,                           tree:null },
+  'org.xmlpull'                          : { project:'platform/libcore',             tree:'xml/src/main/java' },
   'org.apache.http'                      : { project:'platform/libcore',             tree:'core/java' },
   'java.math'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'android'                              : { project:'platform/frameworks/base',     tree:'core/java' },
