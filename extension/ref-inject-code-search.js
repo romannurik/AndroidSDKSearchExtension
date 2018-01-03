@@ -85,7 +85,7 @@ var _PACKAGE_MAP = {
   'android.opengl'                       : { project:'platform/frameworks/base',     tree:'opengl/java' },
   'android.sax'                          : { project:'platform/frameworks/base',     tree:'sax/java' },
   'android.telecom'                      : { project:'platform/frameworks/base',     tree:'telecomm/java' },
-  'android.telephony'                    : { project:'platform/frameworks/base',     tree:'telephony/java' },
+  'android.telephony'                    : { project:'platform/frameworks/opt/telephony',     tree:'src/java' },
   'android.net.rtp'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java/' },
   'android.net.sip'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java' },
   'android.net.wifi'                     : { project:'platform/frameworks/base',     tree:'wifi/java' },
