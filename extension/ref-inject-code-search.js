@@ -88,6 +88,7 @@ var _PACKAGE_MAP = {
   'android.telephony'                    : { project:'platform/frameworks/base',     tree:'telephony/java' },
   'android.test'                         : { project:'platform/frameworks/base',     tree:'test-runner/src' },
   'android.test.mock'                    : { project:'platform/frameworks/base',     tree:'test-mock/src' },
+  'android.test.suitebuilder'            : { project:'platform/frameworks/base',     tree:'legacy-test/src' },
   'android.net.rtp'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java' },
   'android.net.sip'                      : { project:'platform/frameworks/opt/net/voip',      tree:'src/java' },
   'android.net.wifi'                     : { project:'platform/frameworks/base',     tree:'wifi/java' },
