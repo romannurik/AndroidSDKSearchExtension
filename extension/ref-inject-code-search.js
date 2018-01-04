@@ -66,6 +66,7 @@ var _PACKAGE_MAP = {
   'javax'                                : { project:'platform/libcore',             tree:'ojluni/src/main/java' },
   'javax.microedition'                   : { project:null,                           tree:null },
   'javax.xml'                            : { project:'platform/libcore',             tree:'luni/src/main/java' },
+  'junit'                                : { project:'platform/frameworks/base',     tree:'legacy-test/src' },
   'org'                                  : { project:'platform/libcore',             tree:'luni/src/main/java' },
   'org.json'                             : { project:'platform/libcore',             tree:'json/src/main/java' },
   'org.xmlpull'                          : { project:null,                           tree:null },
