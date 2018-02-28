@@ -25,8 +25,11 @@ var _ALTERNATIVE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NA
 var _ALTERNATIVE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
 var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
 
-var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
-var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
+var _DEFAULT_TAG = 'refs/heads/master';
+// for class or package
+var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/$GOOGLESOURCE_TAG/$TREE/$NAME_SLASH';
+// for res
+var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/$GOOGLESOURCE_TAG/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
 var _CONSTRAINT_LAYOUT_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/studio-3.0/$TREE/$NAME_SLASH';
 
@@ -295,6 +298,51 @@ var _ATSL_FOLDER_MAP = {
   'uiautomator' : 'uiautomator_test_libraries',
 };
 
+var _API_MAP = {
+    // <4,ignore,go to master
+    4  : 'android-1.6_r1',
+    5  : 'android-2.0_r1',
+    6  : 'android-2.0.1_r1',
+    7  : 'android-2.1_r1',
+    8  : 'android-2.2_r1',
+    9  : 'android-2.3.1_r1',
+    10 : 'android-2.3.3_r1',
+    15 : 'android-4.0.1_r1',
+    16 : 'android-4.1.1_r1',
+    17 : 'android-4.2.1_r1',
+    18 : 'android-4.3_r1',
+    19 : 'android-4.4_r1',
+    20 : 'android-4.4w_r1',
+    21 : 'android-5.0.0_r1',
+    22 : 'android-5.1.0_r1',
+    23 : 'android-6.0.0_r1',
+    24 : 'android-7.0.0_r1',
+    25 : 'android-7.1.0_r1',
+    26 : 'android-8.0.0_r1',
+    27 : 'android-8.1.0_r1'
+}
+
+function getApiTag(apiLevel) {
+  if(apiLevel < 4 || apiLevel > 27) {
+    return 'refs/heads/master';
+  }
+  return _API_MAP[apiLevel];
+}
+
+function getApiLevel() {
+  var resultLevel = -1;
+  try {
+    var userSelectLevel = parseInt(document.querySelector("#apiLevelSelector").options[document.querySelector("#apiLevelSelector").selectedIndex].value);
+    var addLevel = parseInt(document.querySelector("#api-info-block").firstElementChild.firstElementChild.text.replace(/[^0-9]/ig,""));
+
+    if(userSelectLevel >= addLevel) {
+      resultLevel = userSelectLevel;
+    }
+  }catch(err){
+  }
+  return resultLevel;
+}
+
 function trimLastNamePart(s) {
   return s.replace(/\.[^.]*$/, '');
 }
@@ -354,7 +402,7 @@ chrome.storage.local.get({
   baseUrl: _GOOGLESOURCE_SITE
 }, function(items) {
   var url = window.location.href;
-  var appendContent;
+  var injectViews = [];
 
   var m;
   if (m = url.match(_PACKAGE_DOC_URL_REGEX)) {
@@ -417,9 +465,7 @@ chrome.storage.local.get({
         url += folder + '/src/main/java/android/support/test/' + suffix;
       }
 
-      appendContent = [
-          '<a class="__asdk_search_extension_link__" href="', url, '">view source listing</a>'
-      ].join('');
+      injectViews.push(createViewSourceElement("view source listing",url));
     }
 
   } else if (m = url.match(_RESOURCE_DOC_URL_REGEX)) {
@@ -433,7 +479,7 @@ chrome.storage.local.get({
         // Single string, convert to array
         destinations = [destinations];
       }
-      appendContent = '';
+      injectViews.length = 0;
 
       var project = 'base';
       var tree = 'core/res/res';
@@ -444,6 +490,7 @@ chrome.storage.local.get({
         tree = packageName + '/res';
 
         packageName = 'android.support.' + packageName;
+
 
         if (_PACKAGE_MAP[packageName].project == null) return;
       }
@@ -464,15 +511,11 @@ chrome.storage.local.get({
 
       for (var i = 0; i < destinations.length; i++) {
         var resPath = destinations[i];
-        appendContent += [
-            '<a class="__asdk_search_extension_link__" href="',
-            templateUrl.replace(/\$BASEURL/g, items.baseUrl)
+        injectViews.push(createViewSourceElement("view res/"+resPath.replace(/\/$/, ''),
+              templateUrl.replace(/\$BASEURL/g, items.baseUrl)
                 .replace(/\$PROJECT/g, project)
-                .replace(/\$TREE/g, tree) + resPath,
-            '">view res/',
-            resPath.replace(/\/$/, ''),
-            '</a>'
-        ].join('');
+                .replace(/\$TREE/g, tree) + resPath
+          ));
       }
     }
 
@@ -533,17 +576,17 @@ chrome.storage.local.get({
                  + espressoInfo.folder + '/src/main/java/android/support/test/');
       }
 
-      appendContent = [
-          '<a class="__asdk_search_extension_link__" href="', url, '">view source</a>'
-      ].join('');
+      injectViews.push(createViewSourceElement("view source",url));
     }
 
   }
 
-  if (appendContent) {
+  if (injectViews.length > 0) {
     var appendNode = document.createElement('div');
     appendNode.classList.add('__asdk_search_extension_link_container__');
-    appendNode.innerHTML = appendContent;
+    for(var i=0;i<injectViews.length;i++){
+        appendNode.appendChild(injectViews[i]);
+    }
     document.querySelector('#jd-content').insertBefore(
         appendNode, document.querySelector('#jd-content h1').nextSibling);
   }
@@ -580,3 +623,17 @@ chrome.storage.local.get({
   }
 
 });
+
+function createViewSourceElement(text,url) {
+  var newItem = document.createElement("button");
+  newItem.innerHTML = text;
+  newItem.classList.add("__asdk_search_extension_link__");
+  newItem.onclick = function() {
+    var hrefUrl = url;
+    if(url.indexOf("$GOOGLESOURCE_TAG") != -1) {
+      hrefUrl = hrefUrl.replace(/\$GOOGLESOURCE_TAG/g,getApiTag(getApiLevel()));
+    }
+    window.location.href = hrefUrl;
+  };
+  return newItem;
+}
