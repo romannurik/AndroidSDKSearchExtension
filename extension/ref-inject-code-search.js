@@ -27,7 +27,7 @@ var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples'
 // for class or package
 var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/$GOOGLESOURCE_TAG/$TREE/$NAME_SLASH';
 // for res
-var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/$GOOGLESOURCE_TAG/$TREE/';
+var _GOOGLESOURCE_RESOURCES_PATH = _GOOGLESOURCE_SITE + '/platform/frameworks/$PROJECT/+/refs/heads/master/$TREE/';
 var _GOOGLESOURCE_SAMPLES_PATH = _GOOGLESOURCE_SITE + '/platform/development/+/master/samples';
 var _CONSTRAINT_LAYOUT_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/studio-3.0/$TREE/$NAME_SLASH';
 
