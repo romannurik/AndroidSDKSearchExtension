@@ -24,8 +24,6 @@ var _GITHUB_SITE = "https://github.com";
 var _ALTERNATIVE_URL_TEMPLATE = '$BASEURL/$PROJECT/+/refs/heads/master/$TREE/$NAME_SLASH';
 var _ALTERNATIVE_RESOURCES_PATH = '$BASEURL/platform/frameworks/base/+/refs/heads/master/core/res/res/';
 var _ALTERNATIVE_SAMPLES_PATH = '$BASEURL/platform/development/+/master/samples';
-
-var _DEFAULT_TAG = 'refs/heads/master';
 // for class or package
 var _GOOGLESOURCE_URL_TEMPLATE = _GOOGLESOURCE_SITE + '/$PROJECT/+/$GOOGLESOURCE_TAG/$TREE/$NAME_SLASH';
 // for res
