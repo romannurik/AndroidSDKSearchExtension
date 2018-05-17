@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\/package-(summary|descr)\.html/;
-var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\.html/;
-var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)\.html/;
+var _PACKAGE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)\/package-(summary|descr)/;
+var _CLASS_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/(.+)/;
+var _RESOURCE_DOC_URL_REGEX = /http(?:s)?:\/\/d(?:eveloper)?\.android\.com\/reference\/android\/(?:.+\/)?(R(?:\..+)?)/;
 
 var _GOOGLESOURCE_SITE = "https://android.googlesource.com";
 var _GITHUB_SITE = "https://github.com";
@@ -330,7 +330,8 @@ function getApiTag(apiLevel) {
 function getApiLevel() {
   var resultLevel = -1;
   try {
-    var userSelectLevel = parseInt(document.querySelector("#apiLevelSelector").options[document.querySelector("#apiLevelSelector").selectedIndex].value);
+    var userSelectLevel = parseInt(document.querySelector("#version-selector-select").options[
+      document.querySelector("#version-selector-select").options.selectedIndex].value);
     var addLevel = parseInt(document.querySelector("#api-info-block").firstElementChild.firstElementChild.text.replace(/[^0-9]/ig,""));
 
     if(userSelectLevel >= addLevel) {
